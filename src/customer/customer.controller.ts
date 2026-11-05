@@ -55,12 +55,6 @@ export class CustomerController {
     private readonly customerRecentlyViewedService: CustomerRecentlyViewedService,
   ) {}
 
-  @Get('homepage')
-  @ApiOperation({ summary: 'Get homepage CMS sections for website' })
-  async getHomepage() {
-    return this.customerHomepageService.getHomepage();
-  }
-
   @Get('banners')
   @ApiOperation({ summary: 'Get active banners for the storefront homepage' })
   async getHomepageBanners() {
@@ -186,7 +180,6 @@ export class CustomerController {
   @ApiQuery({ name: 'newArrivals', required: false, type: Boolean })
   @ApiQuery({ name: 'featured', required: false, type: Boolean })
   @ApiQuery({ name: 'bestDeals', required: false, type: Boolean })
-  @ApiQuery({ name: 'sectionSlugs', required: false, type: String })
   async getStoreProducts(@Query() query: StoreProductsQueryDto) {
     return this.customerService.getStoreProducts(query);
   }

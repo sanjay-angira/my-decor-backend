@@ -19,7 +19,6 @@ import { Offer } from './offer.entity';
 import { Brand } from './brand.entity';
 import { Faq } from './faq.entity';
 import { ProductSeo } from './product-seo.entity';
-import { CmsSection } from '../CMS/cmsSettings.entity';
 import { CategoryAttribute } from '../productCategory/category-attribute.entity';
 import { ProductAttribute } from './product-attribute.entity';
 import { Warehouse } from './warehouse.entity';
@@ -96,18 +95,6 @@ export class Product {
     eager: true,
   })
   reviews!: Review[];
-
-  /**
-   * Legacy single-section FK column. Kept so existing DB links survive
-   * synchronize while we backfill into `sections` (ManyToMany).
-   * Do not write new assignments here — use `sections`.
-   */
-  @Column({ name: 'sectionId', type: 'int', nullable: true })
-  legacySectionId!: number | null;
-
-  /** Homepage / CMS sections this product belongs to (many-to-many). */
-  @ManyToMany(() => CmsSection, (section) => section.products)
-  sections!: CmsSection[];
 
   @OneToMany(() => ProductAttribute, (pa) => pa.product)
   productAttributes!: ProductAttribute[];

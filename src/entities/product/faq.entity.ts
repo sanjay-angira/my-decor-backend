@@ -8,7 +8,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
-import { CmsSection } from '../CMS/cmsSettings.entity';
 
 @Entity('faqs')
 export class Faq {
@@ -35,12 +34,6 @@ export class Faq {
 
   @Column({ nullable: true })
   productId!: number;
-
-  @ManyToOne(() => CmsSection, (section) => section.faqs, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  section!: CmsSection | null;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

@@ -24,7 +24,6 @@ import { CustomerModule } from './customer/customer.module';
 import { ContactUsLeadsModule } from './contact-us-leads/contact-us-leads.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BannerModule } from './banner/banner.module';
-import { CmsSectionModule } from './cms-section/cms-section.module';
 import { UploadModule } from './upload/upload.module';
 import { CmsPageModule } from './cms-page/cms-page.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -33,7 +32,6 @@ import { WarehousesModule } from './warehouses/warehouses.module';
 import { renameProductImageUrlColumns } from './commonServices/rename-product-image-url';
 import { migrateCmsImagesOntoParents } from './commonServices/migrate-cms-images-onto-parents';
 import { removeHeaderCms } from './commonServices/remove-header-cms';
-import { removeUnusedFooterCms } from './commonServices/remove-unused-footer-cms';
 import { migrateProductImagesToVariants } from './commonServices/migrate-product-images-to-variants';
 import { migrateCategorySeoFields } from './commonServices/migrate-category-seo-fields';
 import { migrateProductVariantPackageDimensions } from './commonServices/migrate-product-variant-package-dimensions';
@@ -87,7 +85,6 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
           await migrateProductImagesToVariants(prep);
           await migrateCmsImagesOntoParents(prep);
           await removeHeaderCms(prep);
-          await removeUnusedFooterCms(prep);
           await migrateCategorySeoFields(prep);
           await migrateProductVariantPackageDimensions(prep);
           await migrateRequiredVariantSkus(prep);
@@ -123,7 +120,6 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
     CustomerModule,
     ContactUsLeadsModule,
     BannerModule,
-    CmsSectionModule,
     UploadModule,
     CmsPageModule,
     DashboardModule,

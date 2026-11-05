@@ -329,7 +329,6 @@ export class ReviewsService {
         isManual: true,
         isApproved: false,
         user: null,
-        section: null,
         product: productMap.get(item.productId)!,
       }),
     );

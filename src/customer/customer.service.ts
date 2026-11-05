@@ -21,10 +21,6 @@ import { User } from 'src/entities/user/user.entity';
 import { Cart } from 'src/entities/cart/cart.entity';
 import { CartItem } from 'src/entities/cart/cart-item.entity';
 import { Banner } from 'src/entities/CMS/banner.entity';
-import {
-  CmsSection,
-  CmsSectionType,
-} from 'src/entities/CMS/cmsSettings.entity';
 import { pickOptimizedImageUrl } from 'src/commonServices/image-url.util';
 import {
   bannerImageSource,
@@ -111,8 +107,6 @@ export class CustomerService {
     private readonly cartItemRepository: Repository<CartItem>,
     @InjectRepository(Banner)
     private readonly bannerRepository: Repository<Banner>,
-    @InjectRepository(CmsSection)
-    private readonly cmsSectionRepository: Repository<CmsSection>,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(OrderItem)
@@ -400,17 +394,6 @@ export class CustomerService {
     await this.cartRepository.delete(guestCart.id);
   }
 
-  private slugifySectionTitle(text: string): string {
-    return String(text || '')
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]+/g, '')
-      .replace(/-+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '');
-  }
-
   async getStoreCategories() {
     const categories = await this.categoryRepository
       .createQueryBuilder('category')
@@ -595,7 +578,7 @@ export class CustomerService {
   }
 
   async getStoreFilters() {
-    const [categories, priceBounds, banners, productSections, offers] =
+    const [categories, priceBounds, banners, offers] =
       await Promise.all([
         this.categoryRepository
           .createQueryBuilder('category')
@@ -621,10 +604,6 @@ export class CustomerService {
           order: { position: 'ASC', id: 'ASC' },
           take: 8,
         }),
-        this.cmsSectionRepository.find({
-          where: { status: true },
-          order: { position: 'ASC', id: 'ASC' },
-        }),
         this.offerRepository.find({
           where: { isActive: true },
           order: { offerName: 'ASC', id: 'ASC' },
@@ -639,35 +618,6 @@ export class CustomerService {
       minPrice,
       Math.ceil(Number(priceBounds?.maxPrice) || 100000),
     );
-
-    const productLayoutTypes = new Set<string>([
-      CmsSectionType.PRODUCT_SLIDER,
-      CmsSectionType.CUSTOM,
-    ]);
-
-    const productSectionOptions = productSections
-      .filter((section) => {
-        if (!productLayoutTypes.has(section.type)) return false;
-        // Product slider always listed; custom only when it has products
-        if (section.type === CmsSectionType.PRODUCT_SLIDER) return true;
-        return (section.products?.length || 0) > 0;
-      })
-      .map((section) => {
-        const heading =
-          typeof section.data?.heading === 'string'
-            ? section.data.heading.trim()
-            : '';
-        const title = String(section.title || '').trim();
-        const slug =
-          (section.slug && String(section.slug).trim()) ||
-          this.slugifySectionTitle(title || heading || `section-${section.id}`);
-        return {
-          slug,
-          title: title || heading,
-          type: section.type,
-        };
-      })
-      .filter((section) => Boolean(section.slug));
 
     return successResponse(
       {
@@ -691,14 +641,6 @@ export class CustomerService {
           { value: 'name_asc', label: 'Name: A to Z' },
           { value: 'discount_desc', label: 'Best Discount' },
         ],
-        statusOptions: [
-          ...productSectionOptions.map((section) => ({
-            value: `section:${section.slug}`,
-            label: section.title,
-            sectionSlug: section.slug,
-          })),
-        ],
-        productSections: productSectionOptions,
         ratingOptions: [
           { value: 4, label: '4 Stars & Up' },
           { value: 3, label: '3 Stars & Up' },
@@ -778,10 +720,6 @@ export class CustomerService {
     const newArrivals = this.parseBooleanFlag(query.newArrivals);
     const featured = this.parseBooleanFlag(query.featured);
     const bestDeals = this.parseBooleanFlag(query.bestDeals);
-    const sectionSlugs = (query.sectionSlugs || '')
-      .split(',')
-      .map((slug) => slug.trim().toLowerCase())
-      .filter((slug) => Boolean(slug));
     const minDiscountRaw = query.minDiscount;
     const minDiscountValue = Number(minDiscountRaw);
     const hasMinDiscount =
@@ -835,15 +773,6 @@ export class CustomerService {
         idQb
           .leftJoin('product.category', 'category')
           .andWhere('category.id IN (:...categoryIds)', { categoryIds });
-      }
-
-      if (sectionSlugs.length > 0) {
-        idQb
-          .innerJoin('product.sections', 'cmsSection')
-          .andWhere('cmsSection.slug IN (:...sectionSlugs)', { sectionSlugs })
-          .andWhere('cmsSection.status = :sectionStatus', {
-            sectionStatus: true,
-          });
       }
 
       if (newArrivals) {

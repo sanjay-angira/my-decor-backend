@@ -13,7 +13,6 @@ import { CustomerAuthController } from './customerAuth.controller';
 import { CustomerAuthService } from './customerAuth.service';
 import { User } from 'src/entities/user/user.entity';
 import { Visitor } from 'src/entities/user/visitors.entity';
-import { CmsSection } from 'src/entities/CMS/cmsSettings.entity';
 import { BlogPost } from 'src/entities/blog/blog-posts.entity';
 import { BlogCategory } from 'src/entities/blog/blog-category.entity';
 import { Banner } from 'src/entities/CMS/banner.entity';
@@ -41,7 +40,6 @@ import { ShippingModule } from 'src/shipping/shipping.module';
       CartItem,
       User,
       Visitor,
-      CmsSection,
       BlogPost,
       BlogCategory,
       Banner,

@@ -13,7 +13,6 @@ import {
 import { CategorySeo } from './category-seo.entity';
 import { Offer } from '../product/offer.entity';
 import { CategoryAttribute } from './category-attribute.entity';
-import { CmsSection } from '../CMS/cmsSettings.entity';
 
 @Entity('categories')
 export class Category {
@@ -78,12 +77,6 @@ export class Category {
   @ManyToMany(() => Offer, (offer) => offer.categories)
   @JoinTable()
   categoryOffers!: Offer[];
-
-  @ManyToOne(() => CmsSection, (section) => section.categories, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  section!: CmsSection | null;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

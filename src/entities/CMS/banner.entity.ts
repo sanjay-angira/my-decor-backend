@@ -2,11 +2,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CmsSection } from './cmsSettings.entity';
 
 @Entity('banners')
 export class Banner {
@@ -35,12 +33,6 @@ export class Banner {
 
   @Column({ default: true })
   status!: boolean;
-
-  @ManyToOne(() => CmsSection, (section) => section.banners, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  section!: CmsSection | null;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

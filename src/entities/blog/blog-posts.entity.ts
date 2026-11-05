@@ -6,14 +6,12 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
-  JoinColumn,
   JoinTable,
   OneToOne,
 } from 'typeorm';
 import { BlogTag } from './blog-tag.entity';
 import { BlogCategory } from './blog-category.entity';
 import { BlogSeo } from './blog-seo.entity';
-import { CmsSection } from '../CMS/cmsSettings.entity';
 
 @Entity('blog_posts')
 export class BlogPost {
@@ -76,13 +74,6 @@ export class BlogPost {
 
   @OneToOne(() => BlogSeo, (seo) => seo.blog, { cascade: true })
   seo!: BlogSeo;
-
-  @ManyToOne(() => CmsSection, (section) => section.blogs, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  @JoinColumn({ name: 'sectionId' })
-  section!: CmsSection | null;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

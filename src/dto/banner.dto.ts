@@ -28,8 +28,6 @@ export class CreateBannerDto {
   @IsBoolean()
   status?: boolean;
 
-  @IsNumber()
-  sectionId!: number;
 }
 
 export class UpdateBannerDto extends PartialType(CreateBannerDto) {}

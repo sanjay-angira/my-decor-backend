@@ -47,8 +47,4 @@ export class StoreProductsQueryDto extends PaginationDto {
   @IsOptional()
   bestDeals?: string;
 
-  /** Comma-separated CMS product layout section slugs */
-  @IsString()
-  @IsOptional()
-  sectionSlugs?: string;
 }

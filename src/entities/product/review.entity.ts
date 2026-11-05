@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { Product } from './product.entity';
 import { User } from '../user/user.entity';
-import { CmsSection } from '../CMS/cmsSettings.entity';
 
 @Entity('reviews')
 export class Review {
@@ -36,12 +35,6 @@ export class Review {
 
   @Column({ type: 'varchar', nullable: true })
   userName!: string | null;
-
-  @ManyToOne(() => CmsSection, (section) => section.reviews, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  section!: CmsSection | null;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;
