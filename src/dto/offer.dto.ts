@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsNumber,
   IsEnum,
+  Min,
 } from 'class-validator';
 import { DiscountType } from '../entities/product/offer.entity';
 
@@ -35,8 +36,9 @@ export class CreateOfferDto {
   @IsNotEmpty()
   discountType: DiscountType;
 
-  @ApiProperty()
+  @ApiProperty({ minimum: 0.01 })
   @IsNumber()
+  @Min(0.01)
   @IsNotEmpty()
   discountValue: number;
 
@@ -59,6 +61,11 @@ export class CreateOfferDto {
   @IsBoolean()
   @IsNotEmpty()
   isActive: boolean;
+
+  @ApiPropertyOptional({ default: false })
+  @IsBoolean()
+  @IsOptional()
+  useAsHeroBanner?: boolean;
 }
 
 export class UpdateOfferDto {
@@ -87,8 +94,9 @@ export class UpdateOfferDto {
   @IsNotEmpty()
   discountType: DiscountType;
 
-  @ApiProperty()
+  @ApiProperty({ minimum: 0.01 })
   @IsNumber()
+  @Min(0.01)
   @IsNotEmpty()
   discountValue: number;
 
@@ -111,6 +119,11 @@ export class UpdateOfferDto {
   @IsBoolean()
   @IsNotEmpty()
   isActive: boolean;
+
+  @ApiPropertyOptional({ default: false })
+  @IsBoolean()
+  @IsOptional()
+  useAsHeroBanner?: boolean;
 }
 
 export class OfferResponseDto {
@@ -146,6 +159,9 @@ export class OfferResponseDto {
 
   @ApiProperty()
   isActive: boolean;
+
+  @ApiProperty()
+  useAsHeroBanner: boolean;
 
   @ApiProperty()
   createdAt: Date;

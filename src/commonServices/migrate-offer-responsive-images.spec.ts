@@ -21,6 +21,9 @@ describe('migrateOfferResponsiveImages', () => {
       expect.stringContaining('ADD COLUMN IF NOT EXISTS "mobileImage"'),
     );
     expect(query).toHaveBeenCalledWith(
+      expect.stringContaining('ADD COLUMN IF NOT EXISTS "useAsHeroBanner" boolean NOT NULL DEFAULT false'),
+    );
+    expect(query).toHaveBeenCalledWith(
       expect.stringContaining('COALESCE(NULLIF("desktopImage", \'\'), NULLIF(image, \'\'))'),
     );
     expect(query).toHaveBeenCalledWith(

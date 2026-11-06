@@ -53,11 +53,14 @@ export class Offer {
   @Column({ type: 'timestamp', nullable: true })
   endDate!: Date | null;
 
+  @Column({ type: 'boolean', default: false })
+  timeBased!: boolean;
+
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
   @Column({ type: 'boolean', default: false })
-  timeBased!: boolean;
+  useAsHeroBanner!: boolean;
 
   @ManyToMany(() => Category, (category: Category) => category.categoryOffers)
   categories!: Category[];

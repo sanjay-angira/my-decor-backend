@@ -52,6 +52,7 @@ export class OffersController {
           endDate: '2023-08-31T23:59:59.000Z',
           isActive: true,
           timeBased: true,
+          useAsHeroBanner: true,
         },
       },
       fixed: {
@@ -67,6 +68,7 @@ export class OffersController {
           endDate: '2023-12-31T23:59:59.000Z',
           isActive: true,
           timeBased: true,
+          useAsHeroBanner: false,
         },
       },
     },
@@ -111,6 +113,7 @@ export class OffersController {
           startDate: '2023-06-01T00:00:00.000Z',
           endDate: '2023-09-30T23:59:59.000Z',
           isActive: true,
+          useAsHeroBanner: true,
         },
       },
     },

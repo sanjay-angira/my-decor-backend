@@ -20,7 +20,8 @@ export async function migrateOfferResponsiveImages(
     ALTER TABLE public.offers
       ADD COLUMN IF NOT EXISTS "desktopImage" character varying(2048),
       ADD COLUMN IF NOT EXISTS "tabletImage" character varying(2048),
-      ADD COLUMN IF NOT EXISTS "mobileImage" character varying(2048)
+      ADD COLUMN IF NOT EXISTS "mobileImage" character varying(2048),
+      ADD COLUMN IF NOT EXISTS "useAsHeroBanner" boolean NOT NULL DEFAULT false
   `);
 
   if (columns.has('image')) {

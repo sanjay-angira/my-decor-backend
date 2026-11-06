@@ -42,6 +42,7 @@ export class OffersService {
       desktopImage,
       tabletImage,
       mobileImage,
+      useAsHeroBanner,
     } = createOfferDto;
 
     try {
@@ -68,6 +69,7 @@ export class OffersService {
         startDate: timeBased ? new Date(startDate) : undefined,
         endDate: timeBased ? new Date(endDate) : undefined,
         isActive: isActive,
+        useAsHeroBanner: useAsHeroBanner ?? false,
       };
 
       const offer = this.offerRepository.create(offerData);
@@ -177,6 +179,7 @@ export class OffersService {
       desktopImage,
       tabletImage,
       mobileImage,
+      useAsHeroBanner,
     } = updateOfferDto;
 
     try {
@@ -211,6 +214,9 @@ export class OffersService {
       offer.startDate = timeBased ? new Date(startDate) : null;
       offer.endDate = timeBased ? new Date(endDate) : null;
       offer.isActive = isActive;
+      if (useAsHeroBanner !== undefined) {
+        offer.useAsHeroBanner = useAsHeroBanner;
+      }
 
       const savedOffer = await this.offerRepository.save(offer);
 
