@@ -75,7 +75,7 @@ export class CustomerHomepageService {
           'category.createdAt',
         ])
         .where('category.isActive = :isActive', { isActive: true })
-        .andWhere('category.publishStatus = :publishStatus', {
+        .andWhere('"category"."publishStatus" = :publishStatus', {
           publishStatus: 'published',
         })
         .andWhere('category.categorySlug IS NOT NULL')

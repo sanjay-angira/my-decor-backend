@@ -398,7 +398,7 @@ export class CustomerService {
       .createQueryBuilder('category')
       .leftJoinAndSelect('category.parent', 'parent')
       .where('category.isActive = :isActive', { isActive: true })
-      .andWhere('category.publishStatus = :publishStatus', {
+      .andWhere('"category"."publishStatus" = :publishStatus', {
         publishStatus: 'published',
       })
       .orderBy('category.categoryName', 'ASC')
@@ -431,7 +431,6 @@ export class CustomerService {
             categoryMobileImageSource(category),
             400,
           ),
-          bannerImage: category.bannerImage || null,
           productCount,
           parentId: category.parent?.id ?? null,
           href: category.categorySlug
@@ -492,7 +491,7 @@ export class CustomerService {
       this.categoryRepository
         .createQueryBuilder('category')
         .where('category.isActive = :isActive', { isActive: true })
-        .andWhere('category.publishStatus = :publishStatus', {
+        .andWhere('"category"."publishStatus" = :publishStatus', {
           publishStatus: 'published',
         })
         .andWhere(
@@ -588,7 +587,7 @@ export class CustomerService {
           .createQueryBuilder('category')
           .leftJoinAndSelect('category.parent', 'parent')
           .where('category.isActive = :isActive', { isActive: true })
-          .andWhere('category.publishStatus = :publishStatus', {
+          .andWhere('"category"."publishStatus" = :publishStatus', {
             publishStatus: 'published',
           })
           .orderBy('category.categoryName', 'ASC')
@@ -640,7 +639,6 @@ export class CustomerService {
           mobileImage:
             pickOptimizedImageUrl(categoryMobileImageSource(category), 400) ||
             null,
-          bannerImage: category.bannerImage || null,
           parentId: category.parent?.id ?? null,
         })),
         priceRange: { min: minPrice, max: maxPrice },

@@ -30,13 +30,6 @@ export class Category {
   @Column({ type: 'varchar', nullable: true })
   description!: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['draft', 'published', 'scheduled'],
-    default: 'draft',
-  })
-  publishStatus!: string;
-
   /** Desktop banner image used for responsive category imagery. */
   @Column({ type: 'varchar', length: 2048, nullable: true })
   desktopBanner!: string | null;
@@ -56,10 +49,6 @@ export class Category {
   /** Category image shown on mobile (uploaded as WebP). */
   @Column({ type: 'varchar', length: 2048, nullable: true })
   mobileImage!: string | null;
-
-  /** Wide image displayed at the top of the category shop page. */
-  @Column({ type: 'varchar', length: 2048, nullable: true })
-  bannerImage!: string | null;
 
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
