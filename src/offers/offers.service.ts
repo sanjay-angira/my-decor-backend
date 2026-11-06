@@ -38,7 +38,6 @@ export class OffersService {
       endDate,
       discountType,
       isActive,
-      offerSlug,
       timeBased,
       desktopImage,
       tabletImage,
@@ -59,7 +58,7 @@ export class OffersService {
 
       const offerData = {
         offerName: offerName,
-        offerSlug: offerSlug,
+        offerSlug: await this.generateUniqueOfferSlug(offerName),
         desktopImage: desktopImage?.trim() || null,
         tabletImage: tabletImage?.trim() || null,
         mobileImage: mobileImage?.trim() || null,
@@ -174,7 +173,6 @@ export class OffersService {
       endDate,
       discountType,
       isActive,
-      offerSlug,
       timeBased,
       desktopImage,
       tabletImage,
@@ -197,7 +195,7 @@ export class OffersService {
       }
 
       offer.offerName = offerName;
-      offer.offerSlug = offerSlug;
+      offer.offerSlug = await this.generateUniqueOfferSlug(offerName, id);
       if (desktopImage !== undefined) {
         offer.desktopImage = desktopImage.trim() || null;
       }
@@ -250,5 +248,29 @@ export class OffersService {
     } catch (error) {
       throw error;
     }
+  }
+
+  private async generateUniqueOfferSlug(
+    offerName: string,
+    excludeId?: number,
+  ): Promise<string> {
+    const baseSlug = this.utilityService.createSlug(offerName) || 'offer';
+    let slug = baseSlug;
+    let suffix = 2;
+    let existing = await this.offerRepository.findOne({
+      where: { offerSlug: slug },
+      select: { id: true },
+    });
+
+    while (existing && existing.id !== excludeId) {
+      slug = `${baseSlug}-${suffix}`;
+      suffix += 1;
+      existing = await this.offerRepository.findOne({
+        where: { offerSlug: slug },
+        select: { id: true },
+      });
+    }
+
+    return slug;
   }
 }

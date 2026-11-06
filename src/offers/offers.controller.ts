@@ -43,7 +43,6 @@ export class OffersController {
         summary: 'Percentage discount example',
         value: {
           offerName: 'Summer Sale',
-          offerSlug: 'summer-sale-2023',
           desktopImage: 'https://cdn.example.com/offers/summer-sale-desktop.webp',
           tabletImage: 'https://cdn.example.com/offers/summer-sale-tablet.webp',
           mobileImage: 'https://cdn.example.com/offers/summer-sale-mobile.webp',
@@ -59,7 +58,6 @@ export class OffersController {
         summary: 'Fixed amount discount example',
         value: {
           offerName: 'Holiday Discount',
-          offerSlug: 'holiday-discount-2023',
           desktopImage: 'https://cdn.example.com/offers/holiday-discount-desktop.webp',
           tabletImage: 'https://cdn.example.com/offers/holiday-discount-tablet.webp',
           mobileImage: 'https://cdn.example.com/offers/holiday-discount-mobile.webp',
@@ -105,7 +103,6 @@ export class OffersController {
         summary: 'Update offer example',
         value: {
           offerName: 'Updated Summer Sale',
-          offerSlug: 'updated-summer-sale-2023',
           desktopImage: 'https://cdn.example.com/offers/updated-summer-sale-desktop.webp',
           tabletImage: 'https://cdn.example.com/offers/updated-summer-sale-tablet.webp',
           mobileImage: 'https://cdn.example.com/offers/updated-summer-sale-mobile.webp',

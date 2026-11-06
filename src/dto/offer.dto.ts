@@ -15,11 +15,6 @@ export class CreateOfferDto {
   @IsNotEmpty()
   offerName: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  offerSlug: string;
-
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
@@ -71,11 +66,6 @@ export class UpdateOfferDto {
   @IsString()
   @IsNotEmpty()
   offerName: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  offerSlug: string;
 
   @ApiPropertyOptional()
   @IsString()
