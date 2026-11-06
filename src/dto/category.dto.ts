@@ -172,14 +172,6 @@ export class CreateCategoryDto {
   publishStatus?: string;
 
   @ApiPropertyOptional({
-    example: 'https://example.com/images/spices-mobile.jpg',
-    description: 'Category image shown on mobile (uploaded as WebP)',
-  })
-  @IsOptional()
-  @IsString()
-  mobileImage?: string;
-
-  @ApiPropertyOptional({
     example: 'https://example.com/images/spices-banner.webp',
     description: 'Wide banner image displayed on the category shop page',
   })
@@ -270,13 +262,6 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   publishStatus?: string;
-
-  @ApiPropertyOptional({
-    description: 'Category image shown on mobile (uploaded as WebP)',
-  })
-  @IsOptional()
-  @IsString()
-  mobileImage?: string | null;
 
   @ApiPropertyOptional({
     description: 'Wide banner image displayed on the category shop page',

@@ -56,7 +56,6 @@ export async function migrateCmsImagesOntoParents(
 ): Promise<void> {
   // Categories
   await ensureVarcharColumn(dataSource, 'categories', 'image');
-  await ensureVarcharColumn(dataSource, 'categories', 'mobileImage');
   await ensureVarcharColumn(dataSource, 'categories', 'bannerImage');
 
   if (await tableExists(dataSource, 'category_images')) {

@@ -46,10 +46,6 @@ export class Category {
   @Column({ type: 'varchar', length: 2048, nullable: true })
   image!: string | null;
 
-  /** Category image shown on mobile (uploaded as WebP). */
-  @Column({ type: 'varchar', length: 2048, nullable: true })
-  mobileImage!: string | null;
-
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 

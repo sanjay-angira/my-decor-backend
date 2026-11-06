@@ -14,7 +14,6 @@ export function categoryImageSource(category: Category) {
 export function categoryMobileImageSource(category: Category) {
   const url = (
     category.mobileBanner ||
-    category.mobileImage ||
     category.desktopBanner ||
     category.image ||
     ''

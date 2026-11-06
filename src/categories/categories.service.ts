@@ -43,7 +43,6 @@ export class CategoriesService {
       tabletBanner,
       mobileBanner,
       seo,
-      mobileImage,
       showOnHomePage,
     } = createCategoryDto;
     try {
@@ -71,8 +70,7 @@ export class CategoriesService {
         image: desktopBanner ?? image ?? null,
         desktopBanner: desktopBanner ?? image ?? null,
         tabletBanner: tabletBanner ?? null,
-        mobileBanner: mobileBanner ?? mobileImage ?? null,
-        mobileImage: mobileBanner ?? mobileImage ?? null,
+        mobileBanner: mobileBanner ?? null,
         showOnHomePage,
         parent,
         categoryOffers: offers,
@@ -163,7 +161,6 @@ export class CategoriesService {
       tabletBanner,
       mobileBanner,
       seo,
-      mobileImage,
       showOnHomePage,
     } = updateCategoryDto;
     try {
@@ -201,13 +198,7 @@ export class CategoriesService {
         category.desktopBanner = image;
       }
       if (tabletBanner !== undefined) category.tabletBanner = tabletBanner;
-      if (mobileBanner !== undefined) {
-        category.mobileBanner = mobileBanner;
-        category.mobileImage = mobileBanner;
-      } else if (mobileImage !== undefined) {
-        category.mobileImage = mobileImage;
-        category.mobileBanner = mobileImage;
-      }
+      if (mobileBanner !== undefined) category.mobileBanner = mobileBanner;
       if (seo) {
         if (category.seo) {
           Object.assign(category.seo, seo);
