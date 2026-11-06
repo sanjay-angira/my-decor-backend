@@ -34,11 +34,11 @@ export class CategoriesService {
       offerIds,
       parentId,
       categoryName,
-      video,
       shortDescription,
       description,
       isActive,
       image,
+      video,
       desktopBanner,
       tabletBanner,
       mobileBanner,
@@ -68,10 +68,10 @@ export class CategoriesService {
         shortDescription,
         description,
         isActive: isActive ?? true,
-        image: desktopBanner ?? image ?? null,
         desktopBanner: desktopBanner ?? image ?? null,
         tabletBanner: tabletBanner ?? null,
         mobileBanner: mobileBanner ?? null,
+        image: image ?? desktopBanner ?? null,
         video: video ?? null,
         showOnHomePage,
         useAsHeroBanner: useAsHeroBanner ?? false,
@@ -205,11 +205,11 @@ export class CategoriesService {
         category.useAsHeroBanner = useAsHeroBanner;
       if (desktopBanner !== undefined) {
         category.desktopBanner = desktopBanner;
-        category.image = desktopBanner;
       } else if (image !== undefined) {
-        category.image = image;
         category.desktopBanner = image;
       }
+      if (image !== undefined) category.image = image;
+      else if (desktopBanner !== undefined) category.image = desktopBanner;
       if (tabletBanner !== undefined) category.tabletBanner = tabletBanner;
       if (mobileBanner !== undefined) category.mobileBanner = mobileBanner;
       if (video !== undefined) category.video = video;
