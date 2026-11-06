@@ -37,10 +37,6 @@ export class Category {
   })
   publishStatus!: string;
 
-  /** Category image URL (uploaded as WebP). */
-  @Column({ type: 'varchar', length: 2048, nullable: true })
-  image!: string | null;
-
   /** Desktop banner image used for responsive category imagery. */
   @Column({ type: 'varchar', length: 2048, nullable: true })
   desktopBanner!: string | null;
@@ -52,6 +48,10 @@ export class Category {
   /** Mobile banner image used for responsive category imagery. */
   @Column({ type: 'varchar', length: 2048, nullable: true })
   mobileBanner!: string | null;
+
+  /** Category image URL (uploaded as WebP). */
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  image!: string | null;
 
   /** Category image shown on mobile (uploaded as WebP). */
   @Column({ type: 'varchar', length: 2048, nullable: true })
