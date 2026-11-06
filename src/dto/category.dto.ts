@@ -23,13 +23,6 @@ export class CategorySeoDto {
   @IsString()
   metaDescription?: string;
 
-  @ApiPropertyOptional({
-    example: 'organic spices, indian spices, turmeric, cumin',
-  })
-  @IsOptional()
-  @IsString()
-  metaKeywords?: string;
-
   @ApiPropertyOptional({ example: 'https://yoursite.com/categories/spices' })
   @IsOptional()
   @IsString()
@@ -55,11 +48,6 @@ export class CategorySeoDto {
   @IsOptional()
   @IsBoolean()
   robotsFollow?: boolean;
-
-  @ApiPropertyOptional({ example: 'index, follow' })
-  @IsOptional()
-  @IsString()
-  metaRobots?: string;
 
   @ApiPropertyOptional({ example: 'Best Organic Spices' })
   @IsOptional()
@@ -102,6 +90,11 @@ export class CategorySeoDto {
   @IsOptional()
   @IsString()
   schemaType?: string;
+
+  @ApiPropertyOptional({ description: 'SEO content for the category page' })
+  @IsOptional()
+  @IsString()
+  seoContent?: string;
 }
 
 export class CreateCategoryDto {
