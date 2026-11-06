@@ -44,7 +44,9 @@ export class OffersController {
         value: {
           offerName: 'Summer Sale',
           offerSlug: 'summer-sale-2023',
-          image: 'https://cdn.example.com/offers/summer-sale.jpg',
+          desktopImage: 'https://cdn.example.com/offers/summer-sale-desktop.webp',
+          tabletImage: 'https://cdn.example.com/offers/summer-sale-tablet.webp',
+          mobileImage: 'https://cdn.example.com/offers/summer-sale-mobile.webp',
           discountType: 'percentage',
           discountValue: 25.5,
           startDate: '2023-06-01T00:00:00.000Z',
@@ -58,7 +60,9 @@ export class OffersController {
         value: {
           offerName: 'Holiday Discount',
           offerSlug: 'holiday-discount-2023',
-          image: 'https://cdn.example.com/offers/holiday-discount.jpg',
+          desktopImage: 'https://cdn.example.com/offers/holiday-discount-desktop.webp',
+          tabletImage: 'https://cdn.example.com/offers/holiday-discount-tablet.webp',
+          mobileImage: 'https://cdn.example.com/offers/holiday-discount-mobile.webp',
           discountType: 'fixed',
           discountValue: 50.0,
           startDate: '2023-12-01T00:00:00.000Z',
@@ -102,7 +106,9 @@ export class OffersController {
         value: {
           offerName: 'Updated Summer Sale',
           offerSlug: 'updated-summer-sale-2023',
-          image: 'https://cdn.example.com/offers/updated-summer-sale.jpg',
+          desktopImage: 'https://cdn.example.com/offers/updated-summer-sale-desktop.webp',
+          tabletImage: 'https://cdn.example.com/offers/updated-summer-sale-tablet.webp',
+          mobileImage: 'https://cdn.example.com/offers/updated-summer-sale-mobile.webp',
           discountType: 'percentage',
           discountValue: 30.0,
           startDate: '2023-06-01T00:00:00.000Z',

@@ -37,6 +37,7 @@ import { migrateCategorySeoFields } from './commonServices/migrate-category-seo-
 import { migrateProductVariantPackageDimensions } from './commonServices/migrate-product-variant-package-dimensions';
 import { migrateRequiredVariantSkus } from './commonServices/migrate-required-variant-skus';
 import { migrateWarehouses } from './commonServices/migrate-warehouses';
+import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
 import { CommonModule } from './commonServices/common.module';
 import { AdminAuthGuard } from './commonServices/admin-auth.guard';
 
@@ -89,6 +90,7 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
           await migrateProductVariantPackageDimensions(prep);
           await migrateRequiredVariantSkus(prep);
           await migrateWarehouses(prep);
+          await migrateOfferResponsiveImages(prep);
         } finally {
           await prep.destroy();
         }

@@ -28,8 +28,14 @@ export class Offer {
   @Column({ type: 'varchar', nullable: true, unique: true })
   offerSlug!: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  image!: string | null;
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  desktopImage!: string | null;
+
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  tabletImage!: string | null;
+
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  mobileImage!: string | null;
 
   @Column({
     type: 'enum',

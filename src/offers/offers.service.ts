@@ -40,7 +40,9 @@ export class OffersService {
       isActive,
       offerSlug,
       timeBased,
-      image,
+      desktopImage,
+      tabletImage,
+      mobileImage,
     } = createOfferDto;
 
     try {
@@ -58,7 +60,9 @@ export class OffersService {
       const offerData = {
         offerName: offerName,
         offerSlug: offerSlug,
-        image: image?.trim() || null,
+        desktopImage: desktopImage?.trim() || null,
+        tabletImage: tabletImage?.trim() || null,
+        mobileImage: mobileImage?.trim() || null,
         discountValue: discountValue,
         discountType: discountType,
         timeBased: timeBased,
@@ -172,7 +176,9 @@ export class OffersService {
       isActive,
       offerSlug,
       timeBased,
-      image,
+      desktopImage,
+      tabletImage,
+      mobileImage,
     } = updateOfferDto;
 
     try {
@@ -192,7 +198,15 @@ export class OffersService {
 
       offer.offerName = offerName;
       offer.offerSlug = offerSlug;
-      offer.image = image?.trim() || null;
+      if (desktopImage !== undefined) {
+        offer.desktopImage = desktopImage.trim() || null;
+      }
+      if (tabletImage !== undefined) {
+        offer.tabletImage = tabletImage.trim() || null;
+      }
+      if (mobileImage !== undefined) {
+        offer.mobileImage = mobileImage.trim() || null;
+      }
       offer.discountValue = discountValue;
       offer.discountType = discountType;
       offer.timeBased = timeBased;

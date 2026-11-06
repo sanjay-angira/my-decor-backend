@@ -11,6 +11,7 @@ import { migrateCategorySeoFields } from './commonServices/migrate-category-seo-
 import { migrateProductVariantPackageDimensions } from './commonServices/migrate-product-variant-package-dimensions';
 import { migrateRequiredVariantSkus } from './commonServices/migrate-required-variant-skus';
 import { migrateWarehouses } from './commonServices/migrate-warehouses';
+import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
 
 async function prepareImageUrlColumns() {
   const prep = new DataSource({
@@ -34,6 +35,7 @@ async function prepareImageUrlColumns() {
     await migrateProductVariantPackageDimensions(prep);
     await migrateRequiredVariantSkus(prep);
     await migrateWarehouses(prep);
+    await migrateOfferResponsiveImages(prep);
   } finally {
     await prep.destroy();
   }

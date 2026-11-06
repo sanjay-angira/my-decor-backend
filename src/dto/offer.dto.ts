@@ -23,7 +23,17 @@ export class CreateOfferDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  image?: string;
+  desktopImage?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  tabletImage?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  mobileImage?: string;
 
   @ApiProperty({ enum: DiscountType })
   @IsEnum(DiscountType)
@@ -70,7 +80,17 @@ export class UpdateOfferDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  image?: string;
+  desktopImage?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  tabletImage?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  mobileImage?: string;
 
   @ApiProperty({ enum: DiscountType })
   @IsEnum(DiscountType)
@@ -114,7 +134,13 @@ export class OfferResponseDto {
   offerSlug: string;
 
   @ApiPropertyOptional()
-  image?: string | null;
+  desktopImage?: string | null;
+
+  @ApiPropertyOptional()
+  tabletImage?: string | null;
+
+  @ApiPropertyOptional()
+  mobileImage?: string | null;
 
   @ApiProperty({ enum: DiscountType })
   discountType: DiscountType;

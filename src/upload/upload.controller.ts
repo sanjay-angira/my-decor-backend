@@ -30,7 +30,7 @@ export class UploadController {
   @Post()
   @ApiOperation({
     summary:
-      'Upload a file to S3. Pass imageType to generate optimized WebP/JPG variants as flat columns.',
+      'Upload a file to S3. Pass imageType to generate optimized WebP output; product images also generate responsive variants.',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -41,7 +41,19 @@ export class UploadController {
         path: { type: 'string', example: 'products/images' },
         imageType: {
           type: 'string',
-          enum: ['product', 'category', 'category_mobile', 'category_banner', 'blog', 'banner', 'banner_mobile'],
+          enum: [
+            'product',
+            'category',
+            'category_mobile',
+            'category_banner',
+            'blog',
+            'banner',
+            'banner_tablet',
+            'banner_mobile',
+            'offer_desktop',
+            'offer_tablet',
+            'offer_mobile',
+          ],
         },
         entityId: { type: 'string' },
       },
