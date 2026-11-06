@@ -39,15 +39,15 @@ export class CategoriesController {
         summary: 'Create category example',
         value: {
           categoryName: 'Incense',
-          categorySlug: 'incense',
           shortDescription: 'A variety of incense',
           description: 'A variety of premium organic incense sticks and cones.',
           parentId: 1,
-          publishStatus: 'published',
           desktopBanner: 'https://example.com/images/incense-desktop.webp',
           tabletBanner: 'https://example.com/images/incense-tablet.webp',
           mobileBanner: 'https://example.com/images/incense-mobile.webp',
+          video: 'https://example.com/videos/incense.mp4',
           showOnHomePage: true,
+          useAsHeroBanner: true,
           offerIds: [1, 2],
           seo: {
             metaTitle: 'Premium Organic Incense | Spiritual Store',
@@ -94,7 +94,6 @@ export class CategoriesController {
         summary: 'Update category example',
         value: {
           categoryName: 'Incense (Updated)',
-          categorySlug: 'incense-updated',
           shortDescription: 'Updated short description',
           description: 'Updated full description for incense.',
           isActive: false,
@@ -102,8 +101,9 @@ export class CategoriesController {
           desktopBanner: 'https://example.com/images/incense-updated-desktop.webp',
           tabletBanner: 'https://example.com/images/incense-updated-tablet.webp',
           mobileBanner: 'https://example.com/images/incense-updated-mobile.webp',
-          publishStatus: 'draft',
+          video: 'https://example.com/videos/incense-updated.mp4',
           showOnHomePage: false,
+          useAsHeroBanner: false,
           offerIds: [3, 4],
           seo: {
             metaTitle: 'Updated Incense Title',

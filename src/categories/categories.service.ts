@@ -34,7 +34,7 @@ export class CategoriesService {
       offerIds,
       parentId,
       categoryName,
-      categorySlug,
+      video,
       shortDescription,
       description,
       isActive,
@@ -44,6 +44,7 @@ export class CategoriesService {
       mobileBanner,
       seo,
       showOnHomePage,
+      useAsHeroBanner,
     } = createCategoryDto;
     try {
       let offers: Offer[] = [];
@@ -63,7 +64,7 @@ export class CategoriesService {
 
       const category = this.categoryRepo.create({
         categoryName,
-        categorySlug,
+        categorySlug: await this.generateUniqueCategorySlug(categoryName),
         shortDescription,
         description,
         isActive: isActive ?? true,
@@ -71,7 +72,9 @@ export class CategoriesService {
         desktopBanner: desktopBanner ?? image ?? null,
         tabletBanner: tabletBanner ?? null,
         mobileBanner: mobileBanner ?? null,
+        video: video ?? null,
         showOnHomePage,
+        useAsHeroBanner: useAsHeroBanner ?? false,
         parent,
         categoryOffers: offers,
       });
@@ -152,7 +155,7 @@ export class CategoriesService {
       offerIds,
       parentId,
       categoryName,
-      categorySlug,
+      video,
       shortDescription,
       description,
       isActive,
@@ -162,6 +165,7 @@ export class CategoriesService {
       mobileBanner,
       seo,
       showOnHomePage,
+      useAsHeroBanner,
     } = updateCategoryDto;
     try {
       const category = await this.categoryRepo.findOne({
@@ -182,14 +186,23 @@ export class CategoriesService {
         }
       }
 
-      if (categoryName !== undefined) category.categoryName = categoryName;
-      if (categorySlug !== undefined) category.categorySlug = categorySlug;
+      if (categoryName !== undefined) {
+        category.categoryName = categoryName;
+      }
+      if (categoryName !== undefined || !category.categorySlug) {
+        category.categorySlug = await this.generateUniqueCategorySlug(
+          categoryName ?? category.categoryName,
+          id,
+        );
+      }
       if (shortDescription !== undefined)
         category.shortDescription = shortDescription;
       if (description !== undefined) category.description = description;
       if (isActive !== undefined) category.isActive = isActive;
       if (showOnHomePage !== undefined)
         category.showOnHomePage = showOnHomePage;
+      if (useAsHeroBanner !== undefined)
+        category.useAsHeroBanner = useAsHeroBanner;
       if (desktopBanner !== undefined) {
         category.desktopBanner = desktopBanner;
         category.image = desktopBanner;
@@ -199,6 +212,7 @@ export class CategoriesService {
       }
       if (tabletBanner !== undefined) category.tabletBanner = tabletBanner;
       if (mobileBanner !== undefined) category.mobileBanner = mobileBanner;
+      if (video !== undefined) category.video = video;
       if (seo) {
         if (category.seo) {
           Object.assign(category.seo, seo);
@@ -374,5 +388,29 @@ export class CategoriesService {
       order: { id: 'ASC' },
     });
     return successResponse(category, 'Categories fetched');
+  }
+
+  private async generateUniqueCategorySlug(
+    categoryName: string,
+    excludeId?: number,
+  ): Promise<string> {
+    const baseSlug = this.utilityService.createSlug(categoryName) || 'category';
+    let slug = baseSlug;
+    let suffix = 2;
+    let existing = await this.categoryRepo.findOne({
+      where: { categorySlug: slug },
+      select: { id: true },
+    });
+
+    while (existing && existing.id !== excludeId) {
+      slug = `${baseSlug}-${suffix}`;
+      suffix += 1;
+      existing = await this.categoryRepo.findOne({
+        where: { categorySlug: slug },
+        select: { id: true },
+      });
+    }
+
+    return slug;
   }
 }

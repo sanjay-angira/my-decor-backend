@@ -46,11 +46,17 @@ export class Category {
   @Column({ type: 'varchar', length: 2048, nullable: true })
   image!: string | null;
 
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  video!: string | null;
+
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
   @Column({ type: 'boolean', default: false })
   showOnHomePage!: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  useAsHeroBanner!: boolean;
 
   @OneToOne(() => CategorySeo, (seo) => seo.category, {
     cascade: true,

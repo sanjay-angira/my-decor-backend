@@ -110,11 +110,6 @@ export class CreateCategoryDto {
   @IsString()
   categoryName!: string;
 
-  @ApiProperty({ example: 'spices' })
-  @IsNotEmpty()
-  @IsString()
-  categorySlug!: string;
-
   @ApiPropertyOptional({ example: 'A short summary of this category.' })
   @IsOptional()
   @IsString()
@@ -129,11 +124,6 @@ export class CreateCategoryDto {
   @IsOptional()
   @IsNumber()
   parentId?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  offer?: boolean;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -163,26 +153,20 @@ export class CreateCategoryDto {
   @IsString()
   mobileBanner?: string;
 
-  @ApiPropertyOptional({
-    enum: ['draft', 'published', 'scheduled'],
-    default: 'draft',
-  })
+  @ApiPropertyOptional({ description: 'Category video URL' })
   @IsOptional()
   @IsString()
-  publishStatus?: string;
-
-  @ApiPropertyOptional({
-    example: 'https://example.com/images/spices-banner.webp',
-    description: 'Wide banner image displayed on the category shop page',
-  })
-  @IsOptional()
-  @IsString()
-  bannerImage?: string;
+  video?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   showOnHomePage?: boolean;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
+  useAsHeroBanner?: boolean;
 
   @ApiPropertyOptional({ type: [Number], example: [1, 2] })
   @IsOptional()
@@ -202,11 +186,6 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   categoryName?: string;
-
-  @ApiPropertyOptional({ example: 'spices' })
-  @IsOptional()
-  @IsString()
-  categorySlug?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -251,6 +230,11 @@ export class UpdateCategoryDto {
   @IsString()
   mobileBanner?: string | null;
 
+  @ApiPropertyOptional({ description: 'Category video URL' })
+  @IsOptional()
+  @IsString()
+  video?: string | null;
+
   @ApiPropertyOptional({ type: [Number] })
   @IsOptional()
   @IsArray()
@@ -258,22 +242,15 @@ export class UpdateCategoryDto {
   @IsNumber({}, { each: true })
   offerIds?: number[];
 
-  @ApiPropertyOptional({ enum: ['draft', 'published', 'scheduled'] })
-  @IsOptional()
-  @IsString()
-  publishStatus?: string;
-
-  @ApiPropertyOptional({
-    description: 'Wide banner image displayed on the category shop page',
-  })
-  @IsOptional()
-  @IsString()
-  bannerImage?: string | null;
-
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   showOnHomePage?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  useAsHeroBanner?: boolean;
 
   @ApiPropertyOptional({ type: CategorySeoDto })
   @IsOptional()
