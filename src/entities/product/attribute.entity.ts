@@ -6,7 +6,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CategoryAttribute } from '../productCategory/category-attribute.entity';
 import { ProductAttribute } from './product-attribute.entity';
 
 @Entity('attributes')
@@ -25,9 +24,6 @@ export class Attribute {
 
   @Column({ default: false })
   supportsImage!: boolean;
-
-  @OneToMany(() => CategoryAttribute, (ca) => ca.attribute)
-  categoryAttributes!: CategoryAttribute[];
 
   @OneToMany(() => ProductAttribute, (pa) => pa.attribute)
   productAttributes!: ProductAttribute[];

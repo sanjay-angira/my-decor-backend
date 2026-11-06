@@ -19,7 +19,7 @@ export class ProductAttribute {
   })
   product!: Product;
 
-  @ManyToOne(() => Attribute, (attribute) => attribute.categoryAttributes, {
+  @ManyToOne(() => Attribute, (attribute) => attribute.productAttributes, {
     onDelete: 'CASCADE',
   })
   attribute!: Attribute;

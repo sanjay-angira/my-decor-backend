@@ -12,7 +12,6 @@ import {
 } from 'typeorm';
 import { CategorySeo } from './category-seo.entity';
 import { Offer } from '../product/offer.entity';
-import { CategoryAttribute } from './category-attribute.entity';
 
 @Entity('categories')
 export class Category {
@@ -70,9 +69,6 @@ export class Category {
 
   @OneToMany(() => Category, (cat: Category) => cat.parent)
   children!: Category[];
-
-  @OneToMany(() => CategoryAttribute, (ca) => ca.category)
-  categoryAttributes!: CategoryAttribute[];
 
   @ManyToMany(() => Offer, (offer) => offer.categories)
   @JoinTable()

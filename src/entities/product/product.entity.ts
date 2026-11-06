@@ -19,7 +19,6 @@ import { Offer } from './offer.entity';
 import { Brand } from './brand.entity';
 import { Faq } from './faq.entity';
 import { ProductSeo } from './product-seo.entity';
-import { CategoryAttribute } from '../productCategory/category-attribute.entity';
 import { ProductAttribute } from './product-attribute.entity';
 import { Warehouse } from './warehouse.entity';
 
