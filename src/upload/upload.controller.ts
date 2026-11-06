@@ -44,6 +44,8 @@ export class UploadController {
           enum: [
             'product',
             'category',
+            'category_desktop',
+            'category_tablet',
             'category_mobile',
             'category_banner',
             'blog',

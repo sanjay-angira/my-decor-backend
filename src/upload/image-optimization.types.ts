@@ -7,6 +7,8 @@ import {
 export type ImageOptimizationType =
   | 'product'
   | 'category'
+  | 'category_desktop'
+  | 'category_tablet'
   | 'category_banner'
   | 'blog'
   | 'banner'
@@ -45,6 +47,20 @@ export const IMAGE_OPTIMIZATION_PRESETS: Record<
     folder: 'categories',
     widths: [800],
     webpQuality: 82,
+    webpOnly: true,
+  },
+  category_desktop: {
+    type: 'category_desktop',
+    folder: 'categories/desktop',
+    widths: [1920],
+    webpQuality: 85,
+    webpOnly: true,
+  },
+  category_tablet: {
+    type: 'category_tablet',
+    folder: 'categories/tablet',
+    widths: [1200],
+    webpQuality: 85,
     webpOnly: true,
   },
   category_banner: {

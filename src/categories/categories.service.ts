@@ -39,11 +39,13 @@ export class CategoriesService {
       description,
       isActive,
       image,
+      desktopBanner,
+      tabletBanner,
+      mobileBanner,
       seo,
       publishStatus,
       mobileImage,
       bannerImage,
-      imageAltText,
       showOnHomePage,
     } = createCategoryDto;
     try {
@@ -69,9 +71,11 @@ export class CategoriesService {
         description,
         isActive: isActive ?? true,
         publishStatus,
-        image: image ?? null,
-        imageAltText: imageAltText ?? null,
-        mobileImage: mobileImage ?? null,
+        image: desktopBanner ?? image ?? null,
+        desktopBanner: desktopBanner ?? image ?? null,
+        tabletBanner: tabletBanner ?? null,
+        mobileBanner: mobileBanner ?? mobileImage ?? null,
+        mobileImage: mobileBanner ?? mobileImage ?? null,
         bannerImage: bannerImage ?? null,
         showOnHomePage,
         parent,
@@ -159,11 +163,13 @@ export class CategoriesService {
       description,
       isActive,
       image,
+      desktopBanner,
+      tabletBanner,
+      mobileBanner,
       seo,
       publishStatus,
       mobileImage,
       bannerImage,
-      imageAltText,
       showOnHomePage,
     } = updateCategoryDto;
     try {
@@ -194,9 +200,21 @@ export class CategoriesService {
       if (publishStatus !== undefined) category.publishStatus = publishStatus;
       if (showOnHomePage !== undefined)
         category.showOnHomePage = showOnHomePage;
-      if (image !== undefined) category.image = image;
-      if (imageAltText !== undefined) category.imageAltText = imageAltText;
-      if (mobileImage !== undefined) category.mobileImage = mobileImage;
+      if (desktopBanner !== undefined) {
+        category.desktopBanner = desktopBanner;
+        category.image = desktopBanner;
+      } else if (image !== undefined) {
+        category.image = image;
+        category.desktopBanner = image;
+      }
+      if (tabletBanner !== undefined) category.tabletBanner = tabletBanner;
+      if (mobileBanner !== undefined) {
+        category.mobileBanner = mobileBanner;
+        category.mobileImage = mobileBanner;
+      } else if (mobileImage !== undefined) {
+        category.mobileImage = mobileImage;
+        category.mobileBanner = mobileImage;
+      }
       if (bannerImage !== undefined) category.bannerImage = bannerImage;
 
       if (seo) {

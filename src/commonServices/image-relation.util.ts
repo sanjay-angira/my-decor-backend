@@ -7,17 +7,19 @@ import { pickOptimizedImageUrl } from './image-url.util';
 export type BannerImageRole = 'desktop' | 'mobile';
 
 export function categoryImageSource(category: Category) {
-  const url = (category.image || '').trim();
+  const url = (category.desktopBanner || category.image || '').trim();
   return { originalUrl: url, url };
 }
 
 export function categoryMobileImageSource(category: Category) {
-  const url = (category.mobileImage || '').trim();
+  const url = (
+    category.mobileBanner ||
+    category.mobileImage ||
+    category.desktopBanner ||
+    category.image ||
+    ''
+  ).trim();
   return { originalUrl: url, url };
-}
-
-export function categoryImageAlt(category: Category, fallback = '') {
-  return category.imageAltText || fallback;
 }
 
 export function blogImageSource(blog: BlogPost) {

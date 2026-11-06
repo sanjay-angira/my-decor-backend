@@ -41,8 +41,17 @@ export class Category {
   @Column({ type: 'varchar', length: 2048, nullable: true })
   image!: string | null;
 
-  @Column({ type: 'varchar', length: 512, nullable: true })
-  imageAltText!: string | null;
+  /** Desktop banner image used for responsive category imagery. */
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  desktopBanner!: string | null;
+
+  /** Tablet banner image used for responsive category imagery. */
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  tabletBanner!: string | null;
+
+  /** Mobile banner image used for responsive category imagery. */
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  mobileBanner!: string | null;
 
   /** Category image shown on mobile (uploaded as WebP). */
   @Column({ type: 'varchar', length: 2048, nullable: true })

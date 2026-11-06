@@ -24,7 +24,6 @@ import { Banner } from 'src/entities/CMS/banner.entity';
 import { pickOptimizedImageUrl } from 'src/commonServices/image-url.util';
 import {
   bannerImageSource,
-  categoryImageAlt,
   categoryImageSource,
   categoryMobileImageSource,
   pickVariantCardImage,
@@ -422,12 +421,17 @@ export class CustomerService {
           description: category.description || '',
           shortDescription: category.shortDescription || '',
           image: pickOptimizedImageUrl(categoryImageSource(category), 400),
+          desktopBanner: pickOptimizedImageUrl(categoryImageSource(category), 1920),
+          tabletBanner: category.tabletBanner || null,
+          mobileBanner: pickOptimizedImageUrl(
+            categoryMobileImageSource(category),
+            800,
+          ),
           mobileImage: pickOptimizedImageUrl(
             categoryMobileImageSource(category),
             400,
           ),
           bannerImage: category.bannerImage || null,
-          imageAlt: categoryImageAlt(category, category.categoryName),
           productCount,
           parentId: category.parent?.id ?? null,
           href: category.categorySlug
@@ -627,6 +631,12 @@ export class CustomerService {
           slug: category.categorySlug,
           image:
             pickOptimizedImageUrl(categoryImageSource(category), 400) || null,
+          desktopBanner:
+            pickOptimizedImageUrl(categoryImageSource(category), 1920) || null,
+          tabletBanner: category.tabletBanner || null,
+          mobileBanner:
+            pickOptimizedImageUrl(categoryMobileImageSource(category), 800) ||
+            null,
           mobileImage:
             pickOptimizedImageUrl(categoryMobileImageSource(category), 400) ||
             null,

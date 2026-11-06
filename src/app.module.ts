@@ -38,6 +38,7 @@ import { migrateProductVariantPackageDimensions } from './commonServices/migrate
 import { migrateRequiredVariantSkus } from './commonServices/migrate-required-variant-skus';
 import { migrateWarehouses } from './commonServices/migrate-warehouses';
 import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
+import { migrateCategoryResponsiveImages } from './commonServices/migrate-category-responsive-images';
 import { CommonModule } from './commonServices/common.module';
 import { AdminAuthGuard } from './commonServices/admin-auth.guard';
 
@@ -91,6 +92,7 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
           await migrateRequiredVariantSkus(prep);
           await migrateWarehouses(prep);
           await migrateOfferResponsiveImages(prep);
+          await migrateCategoryResponsiveImages(prep);
         } finally {
           await prep.destroy();
         }

@@ -12,6 +12,7 @@ import { migrateProductVariantPackageDimensions } from './commonServices/migrate
 import { migrateRequiredVariantSkus } from './commonServices/migrate-required-variant-skus';
 import { migrateWarehouses } from './commonServices/migrate-warehouses';
 import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
+import { migrateCategoryResponsiveImages } from './commonServices/migrate-category-responsive-images';
 
 async function prepareImageUrlColumns() {
   const prep = new DataSource({
@@ -36,6 +37,7 @@ async function prepareImageUrlColumns() {
     await migrateRequiredVariantSkus(prep);
     await migrateWarehouses(prep);
     await migrateOfferResponsiveImages(prep);
+    await migrateCategoryResponsiveImages(prep);
   } finally {
     await prep.destroy();
   }

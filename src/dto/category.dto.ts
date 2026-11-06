@@ -148,6 +148,21 @@ export class CreateCategoryDto {
   @IsString()
   image?: string;
 
+  @ApiPropertyOptional({ description: 'Desktop category banner uploaded as WebP' })
+  @IsOptional()
+  @IsString()
+  desktopBanner?: string;
+
+  @ApiPropertyOptional({ description: 'Tablet category banner uploaded as WebP' })
+  @IsOptional()
+  @IsString()
+  tabletBanner?: string;
+
+  @ApiPropertyOptional({ description: 'Mobile category banner uploaded as WebP' })
+  @IsOptional()
+  @IsString()
+  mobileBanner?: string;
+
   @ApiPropertyOptional({
     enum: ['draft', 'published', 'scheduled'],
     default: 'draft',
@@ -171,11 +186,6 @@ export class CreateCategoryDto {
   @IsOptional()
   @IsString()
   bannerImage?: string;
-
-  @ApiPropertyOptional({ description: 'Image alt text on category' })
-  @IsOptional()
-  @IsString()
-  imageAltText?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -234,6 +244,21 @@ export class UpdateCategoryDto {
   @IsString()
   image?: string | null;
 
+  @ApiPropertyOptional({ description: 'Desktop category banner uploaded as WebP' })
+  @IsOptional()
+  @IsString()
+  desktopBanner?: string | null;
+
+  @ApiPropertyOptional({ description: 'Tablet category banner uploaded as WebP' })
+  @IsOptional()
+  @IsString()
+  tabletBanner?: string | null;
+
+  @ApiPropertyOptional({ description: 'Mobile category banner uploaded as WebP' })
+  @IsOptional()
+  @IsString()
+  mobileBanner?: string | null;
+
   @ApiPropertyOptional({ type: [Number] })
   @IsOptional()
   @IsArray()
@@ -259,11 +284,6 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   bannerImage?: string | null;
-
-  @ApiPropertyOptional({ description: 'Image alt text on category' })
-  @IsOptional()
-  @IsString()
-  imageAltText?: string | null;
 
   @ApiPropertyOptional()
   @IsOptional()
