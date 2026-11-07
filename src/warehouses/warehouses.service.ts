@@ -13,7 +13,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { firstValueFrom } from 'rxjs';
 import { DataSource, Repository } from 'typeorm';
-import { Brand } from 'src/entities/product/brand.entity';
 import {
   Warehouse,
   WarehouseRegistrationStatus,
@@ -55,34 +54,32 @@ export class WarehousesService {
   constructor(
     @InjectRepository(Warehouse)
     private readonly warehouseRepository: Repository<Warehouse>,
-    @InjectRepository(Brand)
-    private readonly brandRepository: Repository<Brand>,
     private readonly http: HttpService,
     private readonly config: ConfigService,
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(brandId: number, dto: CreateWarehouseDto) {
-    const brand = await this.brandRepository.findOne({
-      where: { id: brandId },
-    });
-    if (!brand) throw new NotFoundException('Brand not found');
+  async create(dto: CreateWarehouseDto) {
+    if (dto.isDefault === true && dto.isActive === false) {
+      throw new BadRequestException(
+        'Only active, registered warehouses can be the default warehouse',
+      );
+    }
 
     const duplicate = await this.warehouseRepository.findOne({
       where: [
-        { brandId, name: dto.name, pincode: dto.pincode },
-        { brandId, registeredName: dto.registeredName, pincode: dto.pincode },
+        { name: dto.name, pincode: dto.pincode },
+        { registeredName: dto.registeredName, pincode: dto.pincode },
       ],
     });
     if (duplicate) {
       throw new ConflictException(
-        'A warehouse with this name and PIN code already exists for the brand',
+        'A warehouse with this name or registered account and PIN code already exists',
       );
     }
 
     const warehouse = this.warehouseRepository.create({
       ...dto,
-      brandId,
       addressLine2: dto.addressLine2 || null,
       registrationStatus: WarehouseRegistrationStatus.PENDING,
       registrationError: null,
@@ -106,7 +103,7 @@ export class WarehousesService {
           : null;
       if (databaseCode === '23505') {
         throw new ConflictException(
-          'A warehouse with this name and PIN code already exists for the brand',
+          'A warehouse with this name or registered account and PIN code already exists',
         );
       }
       throw error;
@@ -178,14 +175,61 @@ export class WarehousesService {
     );
   }
 
-  async findByBrand(brandId: number) {
-    const brandExists = await this.brandRepository.existsBy({ id: brandId });
-    if (!brandExists) throw new NotFoundException('Brand not found');
-    const warehouses = await this.warehouseRepository.find({
-      where: { brandId },
-      order: { createdAt: 'DESC' },
-    });
-    return successResponse(warehouses, 'Warehouses retrieved successfully');
+  async findAll(options: {
+    registeredOnly?: boolean;
+    pageNumber?: string;
+    pageSize?: string;
+    search?: string;
+    column?: string;
+    order?: string;
+  } = {}) {
+    const pageNumber = Math.max(1, Number(options.pageNumber) || 1);
+    const pageSize = Math.min(1000, Math.max(1, Number(options.pageSize) || 100));
+    const sortableColumns = new Set([
+      'id',
+      'name',
+      'city',
+      'state',
+      'pincode',
+      'registrationStatus',
+      'isDefault',
+      'isActive',
+      'createdAt',
+    ]);
+    const column = options.column && sortableColumns.has(options.column)
+      ? options.column
+      : 'createdAt';
+    const order = options.order === 'ASC' ? 'ASC' : 'DESC';
+    const query = this.warehouseRepository.createQueryBuilder('warehouse');
+
+    if (options.registeredOnly) {
+      query
+        .where('warehouse.registrationStatus = :registrationStatus', {
+          registrationStatus: WarehouseRegistrationStatus.REGISTERED,
+        })
+        .andWhere('warehouse.isActive = :isActive', { isActive: true });
+    }
+
+    const search = options.search?.trim();
+    if (search) {
+      query.andWhere(
+        `(
+          warehouse.name ILIKE :search
+          OR warehouse.city ILIKE :search
+          OR warehouse.state ILIKE :search
+          OR warehouse.pincode ILIKE :search
+          OR warehouse.registrationStatus ILIKE :search
+        )`,
+        { search: `%${search}%` },
+      );
+    }
+
+    const [rows, count] = await query
+      .orderBy(`warehouse.${column}`, order)
+      .skip((pageNumber - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
+    return successResponse({ rows, count }, 'Warehouses retrieved successfully');
   }
 
   async findOne(id: number) {
@@ -214,18 +258,30 @@ export class WarehousesService {
       }
     }
 
+    const nextIsActive = dto.isActive ?? warehouse.isActive;
+    if (
+      dto.isActive !== undefined &&
+      dto.isActive !== warehouse.isActive &&
+      warehouse.registrationStatus !== WarehouseRegistrationStatus.REGISTERED
+    ) {
+      throw new BadRequestException(
+        'Only registered warehouses can be activated or deactivated',
+      );
+    }
+
     if (
       dto.isDefault === true &&
       (warehouse.registrationStatus !==
         WarehouseRegistrationStatus.REGISTERED ||
-        !warehouse.isActive)
+        !nextIsActive)
     ) {
       throw new BadRequestException(
-        'Only active, registered warehouses can be the brand default',
+        'Only active, registered warehouses can be the default warehouse',
       );
     }
     const { isDefault, ...updateFields } = dto;
     Object.assign(warehouse, updateFields);
+    if (dto.isActive === false) warehouse.isDefault = false;
     if (isDefault === false) warehouse.isDefault = false;
     const saved = await this.warehouseRepository.save(warehouse);
     if (isDefault === true && saved.isActive) return this.setDefault(saved.id);
@@ -239,7 +295,7 @@ export class WarehousesService {
       !warehouse.isActive
     ) {
       throw new BadRequestException(
-        'Only active, registered warehouses can be the brand default',
+        'Only active, registered warehouses can be the default warehouse',
       );
     }
 
@@ -248,7 +304,7 @@ export class WarehousesService {
         .createQueryBuilder()
         .update(Warehouse)
         .set({ isDefault: false })
-        .where('"brandId" = :brandId', { brandId: warehouse.brandId })
+        .where('"isDefault" = true')
         .execute();
       warehouse.isDefault = true;
       return manager.save(Warehouse, warehouse);

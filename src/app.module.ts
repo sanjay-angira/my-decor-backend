@@ -15,7 +15,6 @@ import { ModulesModule } from './modules/modules.module';
 import { RolesModule } from './roles/roles.module';
 import { BlogModule } from './blog/blog.module';
 import { OffersModule } from './offers/offers.module';
-import { BrandsModule } from './brands/brands.module';
 import { FaqModule } from './faq/faq.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { ProductTagsModule } from './tags/product-tags.module';
@@ -37,6 +36,7 @@ import { migrateCategorySeoFields } from './commonServices/migrate-category-seo-
 import { migrateProductVariantPackageDimensions } from './commonServices/migrate-product-variant-package-dimensions';
 import { migrateRequiredVariantSkus } from './commonServices/migrate-required-variant-skus';
 import { migrateWarehouses } from './commonServices/migrate-warehouses';
+import { migrateBrandRemoval } from './commonServices/migrate-brand-removal';
 import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
 import { migrateCategoryResponsiveImages } from './commonServices/migrate-category-responsive-images';
 import { CommonModule } from './commonServices/common.module';
@@ -57,7 +57,7 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js,.tsx,.jsx}'],
-        synchronize: false,
+        synchronize: true,
         autoLoadEntities: true,
         logging: true,
 
@@ -91,6 +91,7 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
           await migrateProductVariantPackageDimensions(prep);
           await migrateRequiredVariantSkus(prep);
           await migrateWarehouses(prep);
+          await migrateBrandRemoval(prep);
           await migrateOfferResponsiveImages(prep);
           await migrateCategoryResponsiveImages(prep);
         } finally {
@@ -117,7 +118,6 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
     RolesModule,
     BlogModule,
     OffersModule,
-    BrandsModule,
     FaqModule,
     CouponsModule,
     ProductTagsModule,

@@ -253,10 +253,6 @@ export class CreateProductDto {
   @IsOptional()
   publishStatus?: PublishStatus;
 
-  @IsNumber()
-  @IsOptional()
-  brandId?: number;
-
   @Type(() => Number)
   @IsInt()
   @IsOptional()
@@ -473,11 +469,6 @@ export class UpdateProductDto {
   @IsOptional()
   @IsEnum(PublishStatus)
   publishStatus?: PublishStatus;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  brandId?: number;
 
   @IsOptional()
   @Type(() => Number)

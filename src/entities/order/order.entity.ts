@@ -23,7 +23,8 @@ export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 export type PaymentMethod = 'cod' | 'online';
 
 export type OrderShipmentSnapshot = {
-  brandId: number;
+  /** Retained for reading legacy order snapshots. New snapshots are warehouse-scoped. */
+  brandId?: number;
   warehouseId: number;
   warehouseName: string;
   originPincode: string;

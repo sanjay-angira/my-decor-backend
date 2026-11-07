@@ -7,7 +7,6 @@ import { CommonModule } from 'src/commonServices/common.module';
 import { ProductVariant } from 'src/entities/product/product-variants.entity';
 import { Tags } from 'src/entities/product/tags.entity';
 import { Offer } from 'src/entities/product/offer.entity';
-import { Brand } from 'src/entities/product/brand.entity';
 import { Faq } from 'src/entities/product/faq.entity';
 import { Product } from 'src/entities/product/product.entity';
 import { ProductSeo } from 'src/entities/product/product-seo.entity';
@@ -35,7 +34,6 @@ import { UpdateProductSeoService } from './updatedProductSeo.service';
       Category,
       Offer,
       Tags,
-      Brand,
       Faq,
       VariantImage,
       Warehouse,

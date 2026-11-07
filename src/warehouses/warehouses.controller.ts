@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { IsBoolean } from 'class-validator';
 import { CreateWarehouseDto, UpdateWarehouseDto } from 'src/dto/warehouse.dto';
@@ -14,7 +15,7 @@ import { AdminApi } from 'src/commonServices/admin-api.decorator';
 
 class WarehouseStatusDto {
   @IsBoolean()
-  isActive!: unknown;
+  isActive!: boolean;
 }
 
 @Controller('admin')
@@ -22,17 +23,28 @@ class WarehouseStatusDto {
 export class WarehousesController {
   constructor(private readonly warehousesService: WarehousesService) {}
 
-  @Post('brands/:brandId/warehouses')
-  create(
-    @Param('brandId', ParseIntPipe) brandId: number,
-    @Body() dto: CreateWarehouseDto,
-  ) {
-    return this.warehousesService.create(brandId, dto);
+  @Post('warehouses')
+  create(@Body() dto: CreateWarehouseDto) {
+    return this.warehousesService.create(dto);
   }
 
-  @Get('brands/:brandId/warehouses')
-  findByBrand(@Param('brandId', ParseIntPipe) brandId: number) {
-    return this.warehousesService.findByBrand(brandId);
+  @Get('warehouses')
+  findAll(
+    @Query('registeredOnly') registeredOnly?: string,
+    @Query('pageNumber') pageNumber?: string,
+    @Query('pageSize') pageSize?: string,
+    @Query('search') search?: string,
+    @Query('column') column?: string,
+    @Query('order') order?: string,
+  ) {
+    return this.warehousesService.findAll({
+      registeredOnly: registeredOnly === 'true',
+      pageNumber,
+      pageSize,
+      search,
+      column,
+      order,
+    });
   }
 
   @Get('warehouses/:id')

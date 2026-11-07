@@ -16,7 +16,6 @@ import { Tags } from './tags.entity';
 import { Review } from './review.entity';
 import { Category } from '../productCategory/category.entity';
 import { Offer } from './offer.entity';
-import { Brand } from './brand.entity';
 import { Faq } from './faq.entity';
 import { ProductSeo } from './product-seo.entity';
 import { ProductAttribute } from './product-attribute.entity';
@@ -52,9 +51,6 @@ export class Product {
 
   @ManyToOne(() => Category, { eager: true })
   category!: Category;
-
-  @ManyToOne(() => Brand, { eager: true, nullable: true, onDelete: 'CASCADE' })
-  brand!: Brand | null;
 
   @Column({ name: 'warehouseId', type: 'int', nullable: true })
   warehouseId!: number | null;

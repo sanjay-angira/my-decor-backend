@@ -11,6 +11,7 @@ import { migrateCategorySeoFields } from './commonServices/migrate-category-seo-
 import { migrateProductVariantPackageDimensions } from './commonServices/migrate-product-variant-package-dimensions';
 import { migrateRequiredVariantSkus } from './commonServices/migrate-required-variant-skus';
 import { migrateWarehouses } from './commonServices/migrate-warehouses';
+import { migrateBrandRemoval } from './commonServices/migrate-brand-removal';
 import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
 import { migrateCategoryResponsiveImages } from './commonServices/migrate-category-responsive-images';
 
@@ -36,6 +37,7 @@ async function prepareImageUrlColumns() {
     await migrateProductVariantPackageDimensions(prep);
     await migrateRequiredVariantSkus(prep);
     await migrateWarehouses(prep);
+    await migrateBrandRemoval(prep);
     await migrateOfferResponsiveImages(prep);
     await migrateCategoryResponsiveImages(prep);
   } finally {

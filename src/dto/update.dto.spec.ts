@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { UpdateCategoryDto } from './category.dto';
 import { UpdateProductDto } from './product.dto';
-import { UpdateBrandDto } from './brand.dto';
 import { UpdateBlogDto } from './blog.dto';
 import { UpdateCouponDto } from './coupon.dto';
 
@@ -24,7 +23,6 @@ describe('update DTO numeric values', () => {
   it('converts product and nested variant IDs from form strings', async () => {
     const result = await pipe.transform(
       {
-        brandId: '2',
         category: '5',
         productOffers: ['1'],
         productTags: ['3'],
@@ -46,7 +44,6 @@ describe('update DTO numeric values', () => {
       { type: 'body', metatype: UpdateProductDto },
     );
 
-    expect(result.brandId).toBe(2);
     expect(result.category).toBe(5);
     expect(result.productOffers).toEqual([1]);
     expect(result.productTags).toEqual([3]);
@@ -127,11 +124,7 @@ describe('update DTO numeric values', () => {
     ).rejects.toThrow();
   });
 
-  it('converts brand, blog, and coupon selected IDs from form strings', async () => {
-    const brand = await pipe.transform(
-      { categoryIds: ['2'], offerIds: ['3'] },
-      { type: 'body', metatype: UpdateBrandDto },
-    );
+  it('converts blog and coupon selected IDs from form strings', async () => {
     const blog = await pipe.transform(
       { tagIds: ['4'] },
       { type: 'body', metatype: UpdateBlogDto },
@@ -141,8 +134,6 @@ describe('update DTO numeric values', () => {
       { type: 'body', metatype: UpdateCouponDto },
     );
 
-    expect(brand.categoryIds).toEqual([2]);
-    expect(brand.offerIds).toEqual([3]);
     expect(blog.tagIds).toEqual([4]);
     expect(coupon.userIds).toEqual([5]);
   });

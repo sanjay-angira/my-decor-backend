@@ -50,7 +50,6 @@ export class ProductsController {
           shortDescription: 'Premium turmeric powder',
           description: 'Natural turmeric powder for daily cooking',
           isActive: true,
-          brandId: 1,
           category: 1,
           productOffers: [1, 2],
           productTags: [1, 2],
@@ -117,7 +116,6 @@ export class ProductsController {
           description: 'Updated description with better performance details',
           isActive: true,
 
-          brandId: 1,
           category: 1,
 
           productOffers: [1, 2],

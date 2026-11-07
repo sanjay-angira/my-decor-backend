@@ -84,11 +84,6 @@ type StoreProductCard = {
     categoryName: string;
     categorySlug: string;
   } | null;
-  brand: {
-    id: number;
-    brandName: string;
-    brandSlug: string;
-  } | null;
 };
 
 @Injectable()
@@ -289,8 +284,6 @@ export class CustomerService {
         'productVariantOffers',
         'product',
         'product.productOffers',
-        'product.brand',
-        'product.brand.brandOffers',
         'product.warehouse',
         'product.category',
         'images',
@@ -312,7 +305,7 @@ export class CustomerService {
       offerSlug: string;
       discountType: string;
       discountValue: number;
-      sources: Array<'product' | 'variant' | 'category' | 'brand'>;
+      sources: Array<'product' | 'variant' | 'category'>;
     } | null;
   }> {
     const variation = await this.loadVariantForOfferPricing(variationId);
@@ -851,7 +844,6 @@ export class CustomerService {
         relations: {
           variants: { images: true, productVariantOffers: true },
           category: { categoryOffers: true },
-          brand: { brandOffers: true },
           productOffers: true,
         },
         relationLoadStrategy: 'query',
@@ -971,7 +963,6 @@ export class CustomerService {
       }
     };
     add(product.productOffers);
-    add(product.brand?.brandOffers);
     add(product.category?.categoryOffers);
     for (const variant of product.variants || []) {
       add(variant.productVariantOffers);
@@ -1110,13 +1101,6 @@ export class CustomerService {
               categorySlug: product.category.categorySlug,
             }
           : null,
-      brand: product.brand
-        ? {
-            id: product.brand.id,
-            brandName: product.brand.brandName,
-            brandSlug: product.brand.brandSlug,
-          }
-        : null,
     };
   }
 
@@ -1164,8 +1148,6 @@ export class CustomerService {
       const product = await this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.category', 'category')
-        .leftJoinAndSelect('product.brand', 'brand')
-        .leftJoinAndSelect('brand.brandOffers', 'brandOffers')
         .leftJoinAndSelect('product.productOffers', 'productOffers')
         .where('product.id = :productId', { productId: productLookup })
         .andWhere('product.isActive = :isActive', { isActive: true })
@@ -1393,8 +1375,6 @@ export class CustomerService {
           relations: [
             'product',
             'product.productOffers',
-            'product.brand',
-            'product.brand.brandOffers',
             'product.warehouse',
             'product.category',
             'productVariantOffers',
@@ -1441,7 +1421,6 @@ export class CustomerService {
           productName: string;
           productSlug: string | null;
           shortDescription: string | null;
-          brandId: number | null;
           warehouseId: number | null;
         } | null;
       } | null;
@@ -1526,7 +1505,6 @@ export class CustomerService {
                     productName: variant.product.productName,
                     productSlug: variant.product.productSlug,
                     shortDescription: variant.product.shortDescription,
-                    brandId: variant.product.brand?.id ?? null,
                     warehouseId: variant.product.warehouseId ?? null,
                   }
                 : null,
@@ -1968,15 +1946,14 @@ export class CustomerService {
     );
 
     const shipmentQuotes = shippingQuotes.map(({ group, quote }) => {
-      const { brandId } = group;
       if (!quote.serviceable) {
         throw new BadRequestException(
-          quote.message || `Delivery is unavailable for brand ${brandId}`,
+          quote.message || 'Delivery is unavailable for this shipment',
         );
       }
       if (dto.paymentMethod === 'cod' && !quote.codAvailable) {
         throw new BadRequestException(
-          `Cash on delivery is unavailable for brand ${brandId}`,
+          'Cash on delivery is unavailable for this shipment',
         );
       }
       if (
@@ -1985,14 +1962,12 @@ export class CustomerService {
         !quote.warehousePincode
       ) {
         throw new BadRequestException(
-          `No valid registered pickup warehouse is available for brand ${brandId}`,
+          'No valid registered pickup warehouse is available',
         );
       }
       return {
-        brandId,
         quote,
         snapshot: {
-          brandId,
           warehouseId: quote.warehouseId,
           warehouseName: quote.warehouseName,
           originPincode: quote.warehousePincode,

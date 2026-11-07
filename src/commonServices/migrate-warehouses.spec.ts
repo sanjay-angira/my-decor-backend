@@ -13,7 +13,7 @@ describe('migrateWarehouses', () => {
       expect.stringContaining('ON DELETE RESTRICT'),
     );
     expect(query).toHaveBeenCalledWith(
-      expect.stringContaining('WHERE "isDefault" = true'),
+      expect.stringContaining('CREATE INDEX IF NOT EXISTS "IDX_warehouses_name_pin"'),
     );
     expect(query).toHaveBeenCalledWith(
       expect.stringContaining('"shipmentJson" jsonb'),

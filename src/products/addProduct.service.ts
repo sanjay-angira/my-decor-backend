@@ -14,7 +14,6 @@ import {
 } from 'src/commonServices/response.service';
 import { Tags } from 'src/entities/product/tags.entity';
 import { Offer } from 'src/entities/product/offer.entity';
-import { Brand } from 'src/entities/product/brand.entity';
 import {
   Warehouse,
   WarehouseRegistrationStatus,
@@ -43,8 +42,6 @@ export class AddProductService {
     private readonly productRepo: Repository<Product>,
     @InjectRepository(Category)
     private readonly categoryRepo: Repository<Category>,
-    @InjectRepository(Brand)
-    private readonly brandRepo: Repository<Brand>,
     @InjectRepository(Warehouse)
     private readonly warehouseRepo: Repository<Warehouse>,
     @InjectRepository(Offer)
@@ -75,35 +72,18 @@ export class AddProductService {
         if (!category) throw new NotFoundException('Category not found');
       }
 
-      /* ================= BRAND ================= */
-      let brand: Brand | null = null;
-      if (createProductDto.brandId) {
-        brand = await this.brandRepo.findOne({
-          where: { id: createProductDto.brandId },
-        });
-
-        if (!brand) throw new NotFoundException('Brand not found');
-      }
-
-      if (createProductDto.warehouseId && !createProductDto.brandId) {
-        throw new BadRequestException(
-          'A brand is required to assign a pickup warehouse',
-        );
-      }
-
       const warehouse = createProductDto.warehouseId
         ? await this.warehouseRepo.findOne({
             where: {
               id: createProductDto.warehouseId,
-              brandId: createProductDto.brandId,
               isActive: true,
               registrationStatus: WarehouseRegistrationStatus.REGISTERED,
             },
           })
         : null;
-      if (createProductDto.brandId && !warehouse) {
+      if (createProductDto.warehouseId && !warehouse) {
         throw new BadRequestException(
-          'Select an active, registered pickup warehouse for this brand',
+          'Select an active, registered pickup warehouse',
         );
       }
 
@@ -167,7 +147,6 @@ export class AddProductService {
         isActive: createProductDto.isActive ?? true,
         publishStatus: createProductDto.publishStatus ?? PublishStatus.DRAFT,
         category: category ?? undefined,
-        brand: brand ?? undefined,
         warehouse: warehouse ?? undefined,
         productOffers: offers,
         frequentlyBoughtTogether: frequentlyBoughtProducts,
@@ -267,7 +246,6 @@ export class AddProductService {
           'productTags',
           'productOffers',
           'category',
-          'brand',
         ],
       });
 
