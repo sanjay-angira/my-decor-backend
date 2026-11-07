@@ -15,7 +15,6 @@ import { User } from 'src/entities/user/user.entity';
 import { Visitor } from 'src/entities/user/visitors.entity';
 import { BlogPost } from 'src/entities/blog/blog-posts.entity';
 import { BlogCategory } from 'src/entities/blog/blog-category.entity';
-import { Banner } from 'src/entities/CMS/banner.entity';
 import { Review } from 'src/entities/product/review.entity';
 import { CustomerBlogService } from './customer-blog.service';
 import { Order } from 'src/entities/order/order.entity';
@@ -42,7 +41,6 @@ import { ShippingModule } from 'src/shipping/shipping.module';
       Visitor,
       BlogPost,
       BlogCategory,
-      Banner,
       Review,
       Order,
       OrderItem,

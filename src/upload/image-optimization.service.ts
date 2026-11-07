@@ -90,7 +90,7 @@ export class ImageOptimizationService {
     const baseFolder = `${preset.folder}/${assetId}`;
     const webpQuality = this.webpQualityOverride ?? preset.webpQuality;
 
-    // Banner / blog / category: store a single WebP file only.
+    // Offer / blog / category images store a single WebP file only.
     if (preset.webpOnly) {
       return this.processWebpOnlyUpload(
         file,

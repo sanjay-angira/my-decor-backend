@@ -11,9 +11,6 @@ export type ImageOptimizationType =
   | 'category_tablet'
   | 'category_banner'
   | 'blog'
-  | 'banner'
-  | 'banner_tablet'
-  | 'banner_mobile'
   | 'offer_desktop'
   | 'offer_tablet'
   | 'offer_mobile'
@@ -26,7 +23,7 @@ export type ImageOptimizationPreset = {
   webpQuality: number;
   /**
    * When true, upload stores a single WebP file (no original + size variants).
-   * Used for responsive banner, offer, blog, and category images. Products
+  * Used for responsive offer, blog, and category images. Products
    * keep the multi-size pipeline.
    */
   webpOnly?: boolean;
@@ -75,27 +72,6 @@ export const IMAGE_OPTIMIZATION_PRESETS: Record<
     folder: 'blogs',
     widths: [1200],
     webpQuality: 82,
-    webpOnly: true,
-  },
-  banner: {
-    type: 'banner',
-    folder: 'banners',
-    widths: [1920],
-    webpQuality: 85,
-    webpOnly: true,
-  },
-  banner_tablet: {
-    type: 'banner_tablet',
-    folder: 'banners/tablet',
-    widths: [1200],
-    webpQuality: 85,
-    webpOnly: true,
-  },
-  banner_mobile: {
-    type: 'banner_mobile',
-    folder: 'banners/mobile',
-    widths: [1200],
-    webpQuality: 85,
     webpOnly: true,
   },
   offer_desktop: {

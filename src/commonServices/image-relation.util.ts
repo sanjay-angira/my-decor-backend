@@ -1,10 +1,7 @@
 import type { Category } from 'src/entities/productCategory/category.entity';
 import type { BlogPost } from 'src/entities/blog/blog-posts.entity';
-import type { Banner } from 'src/entities/CMS/banner.entity';
 import type { VariantImage } from 'src/entities/product/variant-image.entity';
 import { pickOptimizedImageUrl } from './image-url.util';
-
-export type BannerImageRole = 'desktop' | 'mobile';
 
 export function categoryImageSource(category: Category) {
   const url = (category.desktopBanner || category.image || '').trim();
@@ -28,16 +25,6 @@ export function blogImageSource(blog: BlogPost) {
 
 export function blogImageAlt(blog: BlogPost, fallback = '') {
   return blog.blogImageAlt || fallback;
-}
-
-export function bannerImageSource(
-  banner: Banner,
-  role: BannerImageRole = 'desktop',
-) {
-  const raw =
-    role === 'mobile' ? banner.mobileImage || banner.image : banner.image;
-  const url = (raw || '').trim();
-  return { originalUrl: url, url };
 }
 
 export function productImageSource(

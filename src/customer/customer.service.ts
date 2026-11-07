@@ -20,10 +20,8 @@ import { Review } from 'src/entities/product/review.entity';
 import { User } from 'src/entities/user/user.entity';
 import { Cart } from 'src/entities/cart/cart.entity';
 import { CartItem } from 'src/entities/cart/cart-item.entity';
-import { Banner } from 'src/entities/CMS/banner.entity';
 import { pickOptimizedImageUrl } from 'src/commonServices/image-url.util';
 import {
-  bannerImageSource,
   categoryImageSource,
   categoryMobileImageSource,
   pickVariantCardImage,
@@ -99,8 +97,6 @@ export class CustomerService {
     private readonly cartRepository: Repository<Cart>,
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
-    @InjectRepository(Banner)
-    private readonly bannerRepository: Repository<Banner>,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(OrderItem)
@@ -577,7 +573,7 @@ export class CustomerService {
   }
 
   async getStoreFilters() {
-    const [categories, priceBounds, banners, offers] =
+    const [categories, priceBounds, offers] =
       await Promise.all([
         this.categoryRepository
           .createQueryBuilder('category')
@@ -598,11 +594,6 @@ export class CustomerService {
           .select('MIN(variant.price)', 'minPrice')
           .addSelect('MAX(variant.price)', 'maxPrice')
           .getRawOne<{ minPrice: string | null; maxPrice: string | null }>(),
-        this.bannerRepository.find({
-          where: { status: true },
-          order: { position: 'ASC', id: 'ASC' },
-          take: 8,
-        }),
         this.offerRepository.find({
           where: { isActive: true },
           order: { offerName: 'ASC', id: 'ASC' },
@@ -617,6 +608,36 @@ export class CustomerService {
       minPrice,
       Math.ceil(Number(priceBounds?.maxPrice) || 100000),
     );
+    const banners = [
+      ...offers
+        .filter((offer) => offer.useAsHeroBanner && this.isStoreOfferLive(offer))
+        .map((offer) => ({
+          id: `offer-${offer.id}`,
+          source: 'offer',
+          title: offer.offerName || offer.offerSlug || `Offer ${offer.id}`,
+          subtitle: '',
+          image: offer.desktopImage || null,
+          desktopImage: offer.desktopImage || null,
+          tabletImage: offer.tabletImage || null,
+          mobileImage: offer.mobileImage || null,
+          link: '/shop',
+        })),
+      ...categories
+        .filter((category) => category.useAsHeroBanner)
+        .map((category) => ({
+          id: `category-${category.id}`,
+          source: 'category',
+          title: category.categoryName || `Category ${category.id}`,
+          subtitle: category.shortDescription || '',
+          image: category.desktopBanner || category.image || null,
+          desktopImage: category.desktopBanner || category.image || null,
+          tabletImage: category.tabletBanner || null,
+          mobileImage: category.mobileBanner || null,
+          link: category.categorySlug
+            ? `/category/${encodeURIComponent(category.categorySlug)}`
+            : '/shop',
+        })),
+    ].filter((banner) => banner.desktopImage || banner.tabletImage || banner.mobileImage);
 
     return successResponse(
       {
@@ -660,20 +681,7 @@ export class CustomerService {
             discountType: offer.discountType,
             discountValue: Number(offer.discountValue) || 0,
           })),
-        banners: banners.map((banner) => ({
-          id: banner.id,
-          title: banner.title,
-          subtitle: banner.subtitle || '',
-          image: pickOptimizedImageUrl(
-            bannerImageSource(banner, 'desktop'),
-            1920,
-          ),
-          mobileImage: pickOptimizedImageUrl(
-            bannerImageSource(banner, 'mobile'),
-            1200,
-          ),
-          link: banner.bannerLink || '/shop',
-        })),
+        banners,
       },
       'Store filters retrieved successfully',
     );

@@ -5,7 +5,7 @@ import { successResponse } from 'src/commonServices/response.service';
 import { Product, PublishStatus } from 'src/entities/product/product.entity';
 import { Category } from 'src/entities/productCategory/category.entity';
 import { BlogPost } from 'src/entities/blog/blog-posts.entity';
-import { Banner } from 'src/entities/CMS/banner.entity';
+import { Offer } from 'src/entities/product/offer.entity';
 
 @Injectable()
 export class CustomerHomepageService {
@@ -16,16 +16,58 @@ export class CustomerHomepageService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(BlogPost)
     private readonly blogRepository: Repository<BlogPost>,
-    @InjectRepository(Banner)
-    private readonly bannerRepository: Repository<Banner>,
+    @InjectRepository(Offer)
+    private readonly offerRepository: Repository<Offer>,
   ) {}
 
   async getHomepageBanners() {
-    const banners = await this.bannerRepository.find({
-      where: { status: true },
-      order: { position: 'ASC', id: 'ASC' },
-    });
+    const [offers, categories] = await Promise.all([
+      this.offerRepository.find({
+        where: { isActive: true, useAsHeroBanner: true },
+        order: { id: 'ASC' },
+      }),
+      this.categoryRepository.find({
+        where: { isActive: true, useAsHeroBanner: true },
+        order: { id: 'ASC' },
+      }),
+    ]);
+    const banners = [
+      ...offers
+        .filter((offer) => this.isOfferLive(offer))
+        .map((offer) => ({
+          id: `offer-${offer.id}`,
+          source: 'offer',
+          title: offer.offerName || offer.offerSlug || `Offer ${offer.id}`,
+          subtitle: '',
+          image: offer.desktopImage || null,
+          desktopImage: offer.desktopImage || null,
+          tabletImage: offer.tabletImage || null,
+          mobileImage: offer.mobileImage || null,
+          link: '/shop',
+        })),
+      ...categories.map((category) => ({
+        id: `category-${category.id}`,
+        source: 'category',
+        title: category.categoryName || `Category ${category.id}`,
+        subtitle: category.shortDescription || '',
+        image: category.desktopBanner || category.image || null,
+        desktopImage: category.desktopBanner || category.image || null,
+        tabletImage: category.tabletBanner || null,
+        mobileImage: category.mobileBanner || null,
+        link: category.categorySlug
+          ? `/category/${encodeURIComponent(category.categorySlug)}`
+          : '/shop',
+      })),
+    ].filter((banner) => banner.desktopImage || banner.tabletImage || banner.mobileImage);
     return successResponse(banners, 'Homepage banners retrieved successfully');
+  }
+
+  private isOfferLive(offer: Offer): boolean {
+    if (!offer.isActive) return false;
+    if (!offer.timeBased) return true;
+    const now = Date.now();
+    return (!offer.startDate || offer.startDate.getTime() <= now) &&
+      (!offer.endDate || offer.endDate.getTime() >= now);
   }
 
   /**

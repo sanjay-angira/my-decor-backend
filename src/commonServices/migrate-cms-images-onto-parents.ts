@@ -116,27 +116,4 @@ export async function migrateCmsImagesOntoParents(
     console.log('[schema] blog_posts: backfilled from blog_images');
   }
 
-  // Banners
-  await ensureVarcharColumn(dataSource, 'banners', 'image');
-  await ensureVarcharColumn(dataSource, 'banners', 'mobileImage');
-
-  if (await tableExists(dataSource, 'banner_images')) {
-    await dataSource.query(`
-      UPDATE banners b
-      SET image = COALESCE(NULLIF(b.image, ''), img."originalUrl")
-      FROM banner_images img
-      WHERE img."bannerId" = b.id
-        AND img.role = 'desktop'
-        AND (b.image IS NULL OR b.image = '')
-    `);
-    await dataSource.query(`
-      UPDATE banners b
-      SET "mobileImage" = COALESCE(NULLIF(b."mobileImage", ''), img."originalUrl")
-      FROM banner_images img
-      WHERE img."bannerId" = b.id
-        AND img.role = 'mobile'
-        AND (b."mobileImage" IS NULL OR b."mobileImage" = '')
-    `);
-    console.log('[schema] banners: backfilled from banner_images');
-  }
 }

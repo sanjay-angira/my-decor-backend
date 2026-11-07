@@ -1,163 +1,78 @@
-import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateBannerDto } from '../dto/banner.dto';
-import { UpdateBannerDto } from '../dto/banner.dto';
-import { Banner } from '../entities/CMS/banner.entity';
+import { Category } from '../entities/productCategory/category.entity';
+import { Offer } from '../entities/product/offer.entity';
 import { successResponse } from 'src/commonServices/response.service';
 
-const DEPRECATED_BANNER_COLUMNS = [
-  'buttonText',
-  'textColor',
-  'backgroundColor',
-  'buttontext',
-  'textcolor',
-  'backgroundcolor',
-  'button_text',
-  'text_color',
-  'background_color',
-];
-
-const LEGACY_BANNER_LINK_COLUMNS = [
-  'buttonLink',
-  'button_link',
-  'buttonlink',
-  'banner_link',
-  'bannerlink',
-];
+export type BannerSource = 'offer' | 'category';
 
 @Injectable()
-export class BannerService implements OnModuleInit {
+export class BannerService {
   constructor(
-    @InjectRepository(Banner)
-    private readonly bannerRepo: Repository<Banner>,
+    @InjectRepository(Offer)
+    private readonly offerRepository: Repository<Offer>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async onModuleInit() {
-    await this.renameButtonLinkColumn();
-    await this.dropDeprecatedBannerColumns();
-  }
-
-  private async renameButtonLinkColumn() {
-    const rows: Array<{ column_name: string }> = await this.bannerRepo.query(
-      `SELECT column_name
-       FROM information_schema.columns
-       WHERE table_schema = 'public' AND table_name = 'banners'`,
-    );
-    const columns = new Set(rows.map(({ column_name }) => column_name));
-
-    if (!columns.size) return;
-
-    const target = 'bannerLink';
-    for (const legacyColumn of LEGACY_BANNER_LINK_COLUMNS) {
-      if (!columns.has(legacyColumn)) continue;
-
-      if (!columns.has(target)) {
-        await this.bannerRepo.query(
-          `ALTER TABLE "banners" RENAME COLUMN "${legacyColumn}" TO "${target}"`,
-        );
-        columns.delete(legacyColumn);
-        columns.add(target);
-        continue;
-      }
-
-      await this.bannerRepo.query(
-        `UPDATE "banners"
-         SET "${target}" = COALESCE(NULLIF("${target}"::text, ''), "${legacyColumn}"::text)
-         WHERE "${legacyColumn}" IS NOT NULL
-           AND ("${target}" IS NULL OR "${target}"::text = '')`,
-      );
-      await this.bannerRepo.query(
-        `ALTER TABLE "banners" DROP COLUMN "${legacyColumn}"`,
-      );
-      columns.delete(legacyColumn);
-    }
-  }
-
-  private async dropDeprecatedBannerColumns() {
-    for (const column of DEPRECATED_BANNER_COLUMNS) {
-      const rows: unknown[] = await this.bannerRepo.query(
-        `SELECT 1
-         FROM information_schema.columns
-         WHERE table_schema = 'public'
-           AND table_name = 'banners'
-           AND column_name = $1`,
-        [column],
-      );
-
-      if (rows.length) {
-        await this.bannerRepo.query(
-          `ALTER TABLE "banners" DROP COLUMN "${column}"`,
-        );
-      }
-    }
-  }
-
-  private sanitizeBannerDto<T extends CreateBannerDto | UpdateBannerDto>(
-    dto: T,
-  ): T {
-    const legacyDto = dto as T & {
-      buttonText?: string;
-      textColor?: string;
-      backgroundColor?: string;
-      buttonLink?: string;
-    };
-    const sanitized = { ...dto } as T & Record<string, unknown>;
-    delete sanitized.buttonText;
-    delete sanitized.textColor;
-    delete sanitized.backgroundColor;
-    delete sanitized.buttonLink;
-
-    if (
-      legacyDto.buttonLink !== undefined &&
-      sanitized.bannerLink === undefined
-    ) {
-      return { ...sanitized, bannerLink: legacyDto.buttonLink } as T;
-    }
-
-    return sanitized as T;
-  }
-
-  async create(createBannerDto: CreateBannerDto) {
-    const sanitized = this.sanitizeBannerDto(createBannerDto);
-    const banner = await this.bannerRepo.save(
-      this.bannerRepo.create(sanitized),
-    );
-    return successResponse(banner, 'Banner created successfully');
-  }
-
   async findAll() {
-    const [rows, count] = await this.bannerRepo.findAndCount();
-    return successResponse({ rows, count }, 'Banners retrieved successfully');
+    const [offers, categories] = await Promise.all([
+      this.offerRepository.find({ order: { id: 'ASC' } }),
+      this.categoryRepository.find({ order: { id: 'ASC' } }),
+    ]);
+    const rows = [
+      ...offers.map((offer) => ({
+        key: `offer-${offer.id}`,
+        source: 'offer' as const,
+        sourceId: offer.id,
+        name: offer.offerName || offer.offerSlug || `Offer ${offer.id}`,
+        desktopImage: offer.desktopImage || null,
+        tabletImage: offer.tabletImage || null,
+        mobileImage: offer.mobileImage || null,
+        useAsBanner: offer.useAsHeroBanner,
+      })),
+      ...categories.map((category) => ({
+        key: `category-${category.id}`,
+        source: 'category' as const,
+        sourceId: category.id,
+        name: category.categoryName || `Category ${category.id}`,
+        desktopImage: category.desktopBanner || category.image || null,
+        tabletImage: category.tabletBanner || null,
+        mobileImage: category.mobileBanner || null,
+        useAsBanner: category.useAsHeroBanner,
+      })),
+    ].sort((a, b) => a.name.localeCompare(b.name));
+
+    return successResponse(rows, 'Banner sources retrieved successfully');
   }
 
-  async findOne(id: number) {
-    const banner = await this.bannerRepo.findOne({ where: { id } });
-    if (!banner) {
-      throw new NotFoundException('Banner not found');
-    }
-    return successResponse(banner, 'Banner retrieved successfully');
-  }
-
-  async update(id: number, updateBannerDto: UpdateBannerDto) {
-    const banner = await this.bannerRepo.findOne({ where: { id } });
-    if (!banner) {
-      throw new NotFoundException('Banner not found');
+  async setUseAsBanner(source: string, id: number, useAsBanner: boolean) {
+    if (typeof useAsBanner !== 'boolean') {
+      throw new BadRequestException('useAsBanner must be a boolean');
     }
 
-    const sanitized = this.sanitizeBannerDto(updateBannerDto);
-    Object.assign(banner, sanitized);
-    await this.bannerRepo.save(banner);
-
-    return successResponse(banner, 'Banner updated successfully');
-  }
-
-  async remove(id: number) {
-    const banner = await this.bannerRepo.findOne({ where: { id } });
-    if (!banner) {
-      throw new NotFoundException('Banner not found');
+    if (source === 'offer') {
+      const offer = await this.offerRepository.findOne({ where: { id } });
+      if (!offer) throw new NotFoundException('Offer not found');
+      offer.useAsHeroBanner = useAsBanner;
+      await this.offerRepository.save(offer);
+    } else if (source === 'category') {
+      const category = await this.categoryRepository.findOne({ where: { id } });
+      if (!category) throw new NotFoundException('Category not found');
+      category.useAsHeroBanner = useAsBanner;
+      await this.categoryRepository.save(category);
+    } else {
+      throw new BadRequestException('Source must be offer or category');
     }
-    await this.bannerRepo.remove(banner);
-    return successResponse(null, 'Banner deleted successfully');
+
+    return successResponse(
+      { source, id, useAsBanner },
+      'Banner selection updated successfully',
+    );
   }
 }
