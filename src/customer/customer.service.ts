@@ -130,6 +130,9 @@ export class CustomerService {
   }
 
   private isCouponWithinValidity(coupon: Coupon): boolean {
+    if (!coupon.timeBased) return true;
+    if (!coupon.startDate || !coupon.endDate) return false;
+
     const today = new Date().toISOString().slice(0, 10);
     const start = this.toCouponDateKey(coupon.startDate);
     const end = this.toCouponDateKey(coupon.endDate);
