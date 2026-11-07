@@ -36,13 +36,6 @@ export class CouponsService {
     return start <= today && end >= today;
   }
 
-  /** Keeps unique indexes free after soft-delete without touching order snapshots. */
-  private archiveUniqueValue(value: string, id: number): string {
-    const suffix = `__del__${id}`;
-    const maxBase = Math.max(1, 50 - suffix.length);
-    return `${String(value || 'coupon').slice(0, maxBase)}${suffix}`;
-  }
-
   async create(createCouponDto: CreateCouponDto) {
     try {
       const existingCoupon = await this.couponRepository.findOne({
@@ -302,26 +295,22 @@ export class CouponsService {
     }
   }
 
-  /**
-   * Soft-deletes a coupon. Never mutates orders — historical totals and
-   * coupon snapshots on `orders.couponJson` stay exactly as placed.
-   */
   async remove(idDto: IdDto) {
     try {
       const id = Number(idDto.id);
-      const coupon = await this.couponRepository.findOne({
-        where: { id, isDeleted: false },
-      });
+      const coupon = await this.couponRepository.findOne({ where: { id } });
 
       if (!coupon) {
         throw new NotFoundException('Coupon not found');
       }
 
-      coupon.isDeleted = true;
-      coupon.isActive = false;
-      coupon.couponCode = this.archiveUniqueValue(coupon.couponCode, coupon.id);
-
-      await this.couponRepository.save(coupon);
+      await this.couponRepository.manager.transaction(async (manager) => {
+        await manager.query(
+          'DELETE FROM "coupon_users" WHERE "couponId" = $1',
+          [id],
+        );
+        await manager.delete(Coupon, { id });
+      });
       return successResponse(null, 'Coupon deleted successfully');
     } catch (error) {
       throw error;

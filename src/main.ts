@@ -14,6 +14,7 @@ import { migrateWarehouses } from './commonServices/migrate-warehouses';
 import { migrateBrandRemoval } from './commonServices/migrate-brand-removal';
 import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
 import { migrateCategoryResponsiveImages } from './commonServices/migrate-category-responsive-images';
+import { migrateModuleMaterialIcons } from './commonServices/migrate-module-material-icons';
 
 async function prepareImageUrlColumns() {
   const prep = new DataSource({
@@ -40,6 +41,7 @@ async function prepareImageUrlColumns() {
     await migrateBrandRemoval(prep);
     await migrateOfferResponsiveImages(prep);
     await migrateCategoryResponsiveImages(prep);
+    await migrateModuleMaterialIcons(prep);
   } finally {
     await prep.destroy();
   }
