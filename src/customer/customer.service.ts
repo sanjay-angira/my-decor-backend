@@ -424,6 +424,7 @@ export class CustomerService {
             400,
           ),
           productCount,
+          isFeatured: category.isFeatured,
           parentId: category.parent?.id ?? null,
           href: category.categorySlug
             ? `/category/${encodeURIComponent(category.categorySlug)}`

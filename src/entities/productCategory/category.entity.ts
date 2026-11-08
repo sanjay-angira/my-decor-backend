@@ -56,6 +56,9 @@ export class Category {
   showOnHomePage!: boolean;
 
   @Column({ type: 'boolean', default: false })
+  isFeatured!: boolean;
+
+  @Column({ type: 'boolean', default: false })
   useAsHeroBanner!: boolean;
 
   @OneToOne(() => CategorySeo, (seo) => seo.category, {

@@ -159,6 +159,11 @@ export class CreateCategoryDto {
   @ApiPropertyOptional({ default: false })
   @IsOptional()
   @IsBoolean()
+  isFeatured?: boolean;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
   useAsHeroBanner?: boolean;
 
   @ApiPropertyOptional({ type: [Number], example: [1, 2] })
@@ -239,6 +244,11 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsBoolean()
   showOnHomePage?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
 
   @ApiPropertyOptional()
   @IsOptional()

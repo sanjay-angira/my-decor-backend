@@ -44,6 +44,7 @@ export class CategoriesService {
       mobileBanner,
       seo,
       showOnHomePage,
+      isFeatured,
       useAsHeroBanner,
     } = createCategoryDto;
     try {
@@ -74,6 +75,7 @@ export class CategoriesService {
         image: image ?? desktopBanner ?? null,
         video: video ?? null,
         showOnHomePage,
+        isFeatured: isFeatured ?? false,
         useAsHeroBanner: useAsHeroBanner ?? false,
         parent,
         categoryOffers: offers,
@@ -165,6 +167,7 @@ export class CategoriesService {
       mobileBanner,
       seo,
       showOnHomePage,
+      isFeatured,
       useAsHeroBanner,
     } = updateCategoryDto;
     try {
@@ -201,6 +204,7 @@ export class CategoriesService {
       if (isActive !== undefined) category.isActive = isActive;
       if (showOnHomePage !== undefined)
         category.showOnHomePage = showOnHomePage;
+      if (isFeatured !== undefined) category.isFeatured = isFeatured;
       if (useAsHeroBanner !== undefined)
         category.useAsHeroBanner = useAsHeroBanner;
       if (desktopBanner !== undefined) {
