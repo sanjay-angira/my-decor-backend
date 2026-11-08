@@ -35,28 +35,22 @@ export class CustomerHomepageService {
       ...offers
         .filter((offer) => this.isOfferLive(offer))
         .map((offer) => ({
-          id: `offer-${offer.id}`,
+          id: offer.id,
           source: 'offer',
-          title: offer.offerName || offer.offerSlug || `Offer ${offer.id}`,
-          subtitle: '',
-          image: offer.desktopImage || null,
+          title: offer.offerName,
+          slug:offer.offerSlug,
           desktopImage: offer.desktopImage || null,
           tabletImage: offer.tabletImage || null,
           mobileImage: offer.mobileImage || null,
-          link: '/shop',
         })),
       ...categories.map((category) => ({
-        id: `category-${category.id}`,
+        id: category.id,
         source: 'category',
-        title: category.categoryName || `Category ${category.id}`,
-        subtitle: category.shortDescription || '',
-        image: category.desktopBanner || category.image || null,
-        desktopImage: category.desktopBanner || category.image || null,
+        title: category.categoryName,
+        slug: category.categorySlug,
+        desktopImage: category.desktopBanner || null,
         tabletImage: category.tabletBanner || null,
         mobileImage: category.mobileBanner || null,
-        link: category.categorySlug
-          ? `/category/${encodeURIComponent(category.categorySlug)}`
-          : '/shop',
       })),
     ].filter((banner) => banner.desktopImage || banner.tabletImage || banner.mobileImage);
     return successResponse(banners, 'Homepage banners retrieved successfully');
