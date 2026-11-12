@@ -22,8 +22,8 @@ export async function migrateCategoryResponsiveImages(
       ADD COLUMN IF NOT EXISTS "tabletBanner" character varying(2048),
       ADD COLUMN IF NOT EXISTS "mobileBanner" character varying(2048),
       ADD COLUMN IF NOT EXISTS video character varying(2048),
-      ADD COLUMN IF NOT EXISTS "isFeatured" boolean NOT NULL DEFAULT false,
-      ADD COLUMN IF NOT EXISTS "useAsHeroBanner" boolean NOT NULL DEFAULT false
+      ADD COLUMN IF NOT EXISTS "useAsHeroBanner" boolean NOT NULL DEFAULT false,
+      DROP COLUMN IF EXISTS "isFeatured"
   `);
 
   const desktopSource = columns.has('desktopImage')

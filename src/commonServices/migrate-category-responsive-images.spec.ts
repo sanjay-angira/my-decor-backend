@@ -32,7 +32,7 @@ describe('migrateCategoryResponsiveImages', () => {
       expect.stringContaining('ADD COLUMN IF NOT EXISTS "useAsHeroBanner" boolean NOT NULL DEFAULT false'),
     );
     expect(query).toHaveBeenCalledWith(
-      expect.stringContaining('ADD COLUMN IF NOT EXISTS "isFeatured" boolean NOT NULL DEFAULT false'),
+      expect.stringContaining('DROP COLUMN IF EXISTS "isFeatured"'),
     );
     expect(query).toHaveBeenCalledWith(
       expect.stringContaining('COALESCE(NULLIF("desktopBanner", \'\'), NULLIF("desktopImage", \'\'), NULLIF(image, \'\'))'),
