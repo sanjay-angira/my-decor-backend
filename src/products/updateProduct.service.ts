@@ -22,6 +22,7 @@ import {
   Warehouse,
   WarehouseRegistrationStatus,
 } from 'src/entities/product/warehouse.entity';
+import { UtilityService } from 'src/commonServices/utility.service';
 
 @Injectable()
 export class UpdateProductService {
@@ -40,6 +41,7 @@ export class UpdateProductService {
     private readonly productAttributeRepo: Repository<ProductAttribute>,
     @InjectRepository(Attribute)
     private readonly attributeRepo: Repository<Attribute>,
+    private readonly utilityService: UtilityService,
     private readonly productSeoService: UpdateProductSeoService,
     private readonly updateProductVariantService: UpdateProductVariantService,
   ) {}
@@ -78,7 +80,12 @@ export class UpdateProductService {
       /* ================= BASIC UPDATE ================= */
 
       product.productName = updateProductDto.productName ?? product.productName;
-      product.productSlug = updateProductDto.productSlug ?? product.productSlug;
+      if (updateProductDto.productName !== undefined || !product.productSlug) {
+        product.productSlug = await this.generateUniqueProductSlug(
+          product.productName || '',
+          id,
+        );
+      }
       product.shortDescription =
         updateProductDto.shortDescription ?? product.shortDescription;
       product.description = updateProductDto.description ?? product.description;
@@ -222,7 +229,6 @@ export class UpdateProductService {
         await this.updateProductVariantService.updateVariants(
           savedProduct,
           updateProductDto.variants,
-          this.offerRepo,
         );
       }
 
@@ -240,7 +246,6 @@ export class UpdateProductService {
           'variants.images',
           'variants.variantAttributes',
           'variants.variantAttributes.attribute',
-          'variants.productVariantOffers',
           'seo',
           'productTags',
           'productOffers',
@@ -261,5 +266,29 @@ export class UpdateProductService {
     } catch (error) {
       throw error;
     }
+  }
+
+  private async generateUniqueProductSlug(
+    productName: string,
+    excludeId?: number,
+  ): Promise<string> {
+    const baseSlug = this.utilityService.createSlug(productName) || 'product';
+    let slug = baseSlug;
+    let suffix = 2;
+    let existing = await this.productRepo.findOne({
+      where: { productSlug: slug },
+      select: { id: true },
+    });
+
+    while (existing && existing.id !== excludeId) {
+      slug = `${baseSlug}-${suffix}`;
+      suffix += 1;
+      existing = await this.productRepo.findOne({
+        where: { productSlug: slug },
+        select: { id: true },
+      });
+    }
+
+    return slug;
   }
 }

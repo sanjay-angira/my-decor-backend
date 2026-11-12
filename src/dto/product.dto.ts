@@ -93,9 +93,9 @@ export class CreateVariantDto {
   @IsNotEmpty()
   name!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  slug!: string;
+  slug?: string;
 
   @IsNumber()
   price!: number;
@@ -137,11 +137,6 @@ export class CreateVariantDto {
   @ValidateNested({ each: true })
   @Type(() => ImageInputDto)
   images?: ImageInputDto[];
-
-  @IsOptional()
-  @IsArray()
-  @IsNumber({}, { each: true })
-  productVariantOffers?: number[];
 
   @IsOptional()
   @IsArray()
@@ -233,9 +228,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   productName!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  productSlug!: string;
+  productSlug?: string;
 
   @IsString()
   @IsOptional()
@@ -353,12 +348,6 @@ export class UpdateVariantDto {
   @ValidateNested({ each: true })
   @Type(() => ImageInputDto)
   images?: ImageInputDto[];
-
-  @IsOptional()
-  @IsArray()
-  @Type(() => Number)
-  @IsNumber({}, { each: true })
-  productVariantOffers?: number[];
 
   @IsOptional()
   @IsArray()

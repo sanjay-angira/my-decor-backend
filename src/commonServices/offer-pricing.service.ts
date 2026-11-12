@@ -31,7 +31,7 @@ export type AvailableOfferView = {
   offerSlug: string;
   discountType: DiscountType;
   discountValue: number;
-  sources: Array<'product' | 'variant' | 'category'>;
+  sources: Array<'product' | 'category'>;
   sellingPrice: number | null;
   finalPrice: number | null;
   totalDiscount: number;
@@ -44,7 +44,7 @@ export type AppliedOfferView = {
   offerSlug: string;
   discountType: DiscountType;
   discountValue: number;
-  sources: Array<'product' | 'variant' | 'category'>;
+  sources: Array<'product' | 'category'>;
 };
 
 type BestAppliedOfferResult = AppliedOfferView & {
@@ -97,17 +97,14 @@ export class OfferPricingService {
 
   getMergedActiveOffers({
     productOffers = [],
-    variantOffers = [],
     category = null,
   }: {
     productOffers?: Offer[];
-    variantOffers?: Offer[];
     category?: Category | null;
   }) {
     const merged = new Map<number, { offer: Offer; sources: string[] }>();
 
     this.addOffersToMergedMap(merged, productOffers, 'product');
-    this.addOffersToMergedMap(merged, variantOffers, 'variant');
     let currentCategory: Category | null = category;
     while (currentCategory) {
       this.addOffersToMergedMap(
@@ -187,7 +184,6 @@ export class OfferPricingService {
   ): OfferPricingResult {
     const mergedActiveOffers = this.getMergedActiveOffers({
       productOffers: product.productOffers || [],
-      variantOffers: variant.productVariantOffers || [],
       category,
     });
 
@@ -207,7 +203,6 @@ export class OfferPricingService {
 
     const mergedActiveOffers = this.getMergedActiveOffers({
       productOffers: product.productOffers || [],
-      variantOffers: variant.productVariantOffers || [],
       category,
     });
 
@@ -478,7 +473,7 @@ export class OfferPricingService {
   private addOffersToMergedMap(
     merged: Map<number, { offer: Offer; sources: string[] }>,
     offers: Offer[],
-    source: 'product' | 'variant' | 'category',
+    source: 'product' | 'category',
   ) {
     for (const offer of offers || []) {
       if (!this.isOfferApplicable(offer)) {

@@ -154,7 +154,7 @@ export class OffersService {
     try {
       const offer = await this.offerRepository.findOne({
         where: { id },
-        relations: ['categories', 'products', 'productVariants'],
+        relations: ['categories', 'products'],
       });
       if (!offer) throw new NotFoundException('Offer not found');
       return successResponse(

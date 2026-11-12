@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { Category } from '../productCategory/category.entity';
 import { Product } from './product.entity';
-import { ProductVariant } from './product-variants.entity';
 
 export enum DiscountType {
   PERCENTAGE = 'percentage',
@@ -66,9 +65,6 @@ export class Offer {
 
   @ManyToMany(() => Product, (product: Product) => product.productOffers)
   products!: Product[];
-
-  @ManyToMany(() => ProductVariant,(productVariant: ProductVariant) => productVariant.productVariantOffers)
-  productVariants!: ProductVariant[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

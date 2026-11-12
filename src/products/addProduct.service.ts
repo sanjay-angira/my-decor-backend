@@ -18,6 +18,7 @@ import {
   Warehouse,
   WarehouseRegistrationStatus,
 } from 'src/entities/product/warehouse.entity';
+import { UtilityService } from 'src/commonServices/utility.service';
 import { ProductAttribute } from 'src/entities/product/product-attribute.entity';
 import { Attribute } from 'src/entities/product/attribute.entity';
 import { AddProductSeoService } from './addProductSeo.service';
@@ -52,6 +53,7 @@ export class AddProductService {
     private readonly productAttributeRepo: Repository<ProductAttribute>,
     @InjectRepository(Attribute)
     private readonly attributeRepo: Repository<Attribute>,
+    private readonly utilityService: UtilityService,
     private readonly addProductVariantService: AddProductVariantService,
     private readonly addProductSeoService: AddProductSeoService,
   ) {}
@@ -141,7 +143,9 @@ export class AddProductService {
       /* ================= CREATE PRODUCT ================= */
       const product = this.productRepo.create({
         productName: createProductDto.productName,
-        productSlug: createProductDto.productSlug.trim(),
+        productSlug:
+          this.utilityService.createSlug(createProductDto.productName) ||
+          'product',
         shortDescription: createProductDto.shortDescription ?? null,
         description: createProductDto.description ?? null,
         isActive: createProductDto.isActive ?? true,
@@ -181,7 +185,6 @@ export class AddProductService {
       await this.addProductVariantService.createVariants(
         savedProduct,
         createProductDto.variants,
-        this.offerRepo,
       );
 
       /* ================= TAG BIND ================= */
@@ -238,10 +241,8 @@ export class AddProductService {
           'variants.images',
           'variants.variantAttributes',
           'variants.variantAttributes.attribute',
-          'variants.productVariantOffers',
           'productAttributes',
           'productAttributes.attribute',
-          'images',
           'seo',
           'productTags',
           'productOffers',

@@ -100,7 +100,6 @@ export class CustomerWishlistService {
         'variant.product',
         'variant.product.productOffers',
         'variant.product.category',
-        'variant.productVariantOffers',
       ],
       order: { createdAt: 'DESC' },
     });
@@ -170,7 +169,6 @@ export class CustomerWishlistService {
         'variant.product',
         'variant.product.productOffers',
         'variant.product.category',
-        'variant.productVariantOffers',
       ],
     });
 
@@ -193,7 +191,6 @@ export class CustomerWishlistService {
         'variant.product',
         'variant.product.productOffers',
         'variant.product.category',
-        'variant.productVariantOffers',
       ],
     });
 

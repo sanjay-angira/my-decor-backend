@@ -78,10 +78,6 @@ export class ProductsService {
         .leftJoinAndSelect('variants.variantAttributes', 'variantAttributes')
         .leftJoinAndSelect('variantAttributes.attribute', 'variantAttribute')
         .leftJoinAndSelect(
-          'variants.productVariantOffers',
-          'productVariantOffers',
-        )
-        .leftJoinAndSelect(
           'product.frequentlyBoughtTogether',
           'frequentlyBoughtTogether',
         ) // optional

@@ -280,7 +280,6 @@ export class CustomerRecentlyViewedService {
       relations: [
         'variants',
         'variants.images',
-        'variants.productVariantOffers',
         'productOffers',
         'category',
         'reviews',

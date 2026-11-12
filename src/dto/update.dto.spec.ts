@@ -1,6 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { UpdateCategoryDto } from './category.dto';
-import { UpdateProductDto } from './product.dto';
+import { CreateProductDto, UpdateProductDto } from './product.dto';
 import { UpdateBlogDto } from './blog.dto';
 import { UpdateCouponDto } from './coupon.dto';
 
@@ -8,6 +8,37 @@ describe('update DTO numeric values', () => {
   const pipe = new ValidationPipe({
     transform: true,
     transformOptions: { enableImplicitConversion: true },
+  });
+
+  describe('backend-generated product slugs', () => {
+    const pipe = new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    });
+
+    it('accepts product and variant create payloads without client-provided slugs', async () => {
+      const result = await pipe.transform(
+        {
+          productName: 'Handmade Decor',
+          variants: [
+            {
+              name: 'Large Size',
+              price: 1200,
+              stock: 5,
+              packageHeightCm: 10,
+              packageWidthCm: 10,
+              packageLengthCm: 10,
+              packageWeightGrams: 500,
+              sku: 'DECOR-L',
+            },
+          ],
+        },
+        { type: 'body', metatype: CreateProductDto },
+      );
+
+      expect(result.productSlug).toBeUndefined();
+      expect(result.variants[0].slug).toBeUndefined();
+    });
   });
 
   it('converts category parent and offer IDs from form strings', async () => {
@@ -37,7 +68,6 @@ describe('update DTO numeric values', () => {
             packageLengthCm: '20',
             packageWeightGrams: '500',
             sku: 'SKU-100',
-            productVariantOffers: ['12'],
           },
         ],
       },
@@ -57,7 +87,6 @@ describe('update DTO numeric values', () => {
       packageLengthCm: 20,
       packageWeightGrams: 500,
       sku: 'SKU-100',
-      productVariantOffers: [12],
     });
   });
 

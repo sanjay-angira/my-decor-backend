@@ -280,7 +280,6 @@ export class CustomerService {
     return this.variationRepository.findOne({
       where: { id: variationId },
       relations: [
-        'productVariantOffers',
         'product',
         'product.productOffers',
         'product.warehouse',
@@ -304,7 +303,7 @@ export class CustomerService {
       offerSlug: string;
       discountType: string;
       discountValue: number;
-      sources: Array<'product' | 'variant' | 'category'>;
+      sources: Array<'product' | 'category'>;
     } | null;
   }> {
     const variation = await this.loadVariantForOfferPricing(variationId);
@@ -853,7 +852,7 @@ export class CustomerService {
       const products = await this.productRepository.find({
         where: { id: In(idsToLoad) },
         relations: {
-          variants: { images: true, productVariantOffers: true },
+          variants: { images: true },
           category: { categoryOffers: true },
           productOffers: true,
         },
@@ -975,9 +974,6 @@ export class CustomerService {
     };
     add(product.productOffers);
     add(product.category?.categoryOffers);
-    for (const variant of product.variants || []) {
-      add(variant.productVariantOffers);
-    }
     return ids;
   }
 
@@ -1176,7 +1172,6 @@ export class CustomerService {
           where: { product: { id: product.id } },
           relations: {
             images: true,
-            productVariantOffers: true,
             variantAttributes: { attribute: true },
           },
           relationLoadStrategy: 'query',
@@ -1388,7 +1383,6 @@ export class CustomerService {
             'product.productOffers',
             'product.warehouse',
             'product.category',
-            'productVariantOffers',
             'images',
           ],
         })

@@ -6,15 +6,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToMany,
-  JoinTable,
+  Index,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { VariantAttribute } from './product-variant-attribute.entity';
 import { VariantImage } from './variant-image.entity';
-import { Offer } from './offer.entity';
 
 @Entity('product_variants')
+@Index('UQ_product_variants_slug', ['slug'], { unique: true })
 export class ProductVariant {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -43,8 +42,8 @@ export class ProductVariant {
   @Column({ type: 'varchar', nullable: true })
   sku!: string | null;
 
-  @Column({ type: 'varchar', nullable: true })
-  slug!: string | null;
+  @Column({ type: 'varchar' })
+  slug!: string;
 
   @Column({ type: 'varchar', nullable: true })
   description!: string | null;
@@ -54,10 +53,6 @@ export class ProductVariant {
 
   @OneToMany(() => VariantImage, (image) => image.variant, { cascade: true })
   images!: VariantImage[];
-
-  @ManyToMany(() => Offer, (offer) => offer.productVariants)
-  @JoinTable()
-  productVariantOffers!: Offer[];
 
   @ManyToOne(() => Product, (product) => product.variants, {
     onDelete: 'CASCADE',
