@@ -244,6 +244,18 @@ export class CreateProductDto {
   @IsOptional()
   isActive?: boolean;
 
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  newArrival?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  bestSeller?: boolean;
+
   @IsEnum(PublishStatus)
   @IsOptional()
   publishStatus?: PublishStatus;
@@ -454,6 +466,18 @@ export class UpdateProductDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  newArrival?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  bestSeller?: boolean;
 
   @IsOptional()
   @IsEnum(PublishStatus)

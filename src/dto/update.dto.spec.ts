@@ -20,6 +20,9 @@ describe('update DTO numeric values', () => {
       const result = await pipe.transform(
         {
           productName: 'Handmade Decor',
+          isFeatured: true,
+          newArrival: false,
+          bestSeller: true,
           variants: [
             {
               name: 'Large Size',
@@ -37,6 +40,11 @@ describe('update DTO numeric values', () => {
       );
 
       expect(result.productSlug).toBeUndefined();
+      expect(result).toMatchObject({
+        isFeatured: true,
+        newArrival: false,
+        bestSeller: true,
+      });
       expect(result.variants[0].slug).toBeUndefined();
     });
   });
@@ -55,6 +63,9 @@ describe('update DTO numeric values', () => {
     const result = await pipe.transform(
       {
         category: '5',
+        isFeatured: true,
+        newArrival: false,
+        bestSeller: true,
         productOffers: ['1'],
         productTags: ['3'],
         frequentlyBoughtTogether: ['4'],
@@ -75,6 +86,11 @@ describe('update DTO numeric values', () => {
     );
 
     expect(result.category).toBe(5);
+    expect(result).toMatchObject({
+      isFeatured: true,
+      newArrival: false,
+      bestSeller: true,
+    });
     expect(result.productOffers).toEqual([1]);
     expect(result.productTags).toEqual([3]);
     expect(result.frequentlyBoughtTogether).toEqual([4]);

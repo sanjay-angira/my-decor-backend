@@ -46,6 +46,15 @@ export class Product {
   @Column({ type: 'boolean', default: true, nullable: false })
   isActive!: boolean;
 
+  @Column({ type: 'boolean', default: false, nullable: false })
+  isFeatured!: boolean;
+
+  @Column({ type: 'boolean', default: false, nullable: false })
+  newArrival!: boolean;
+
+  @Column({ type: 'boolean', default: false, nullable: false })
+  bestSeller!: boolean;
+
   @Column({ type: 'enum', enum: PublishStatus, default: PublishStatus.DRAFT })
   publishStatus!: PublishStatus;
 

@@ -90,6 +90,9 @@ export class UpdateProductService {
         updateProductDto.shortDescription ?? product.shortDescription;
       product.description = updateProductDto.description ?? product.description;
       product.isActive = updateProductDto.isActive ?? product.isActive;
+      product.isFeatured = updateProductDto.isFeatured ?? product.isFeatured;
+      product.newArrival = updateProductDto.newArrival ?? product.newArrival;
+      product.bestSeller = updateProductDto.bestSeller ?? product.bestSeller;
       product.publishStatus =
         updateProductDto.publishStatus ?? product.publishStatus;
 
