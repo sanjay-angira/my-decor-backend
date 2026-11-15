@@ -39,7 +39,6 @@ import { migrateWarehouses } from './commonServices/migrate-warehouses';
 import { migrateBrandRemoval } from './commonServices/migrate-brand-removal';
 import { migrateOfferResponsiveImages } from './commonServices/migrate-offer-responsive-images';
 import { migrateCategoryResponsiveImages } from './commonServices/migrate-category-responsive-images';
-import { migrateModuleMaterialIcons } from './commonServices/migrate-module-material-icons';
 import { migrateVariantOfferRemoval } from './commonServices/migrate-variant-offer-removal';
 import { migrateProductVariantSlugs } from './commonServices/migrate-product-variant-slugs';
 import { CommonModule } from './commonServices/common.module';
@@ -97,7 +96,6 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
           await migrateBrandRemoval(prep);
           await migrateOfferResponsiveImages(prep);
           await migrateCategoryResponsiveImages(prep);
-          await migrateModuleMaterialIcons(prep);
           await migrateVariantOfferRemoval(prep);
           await migrateProductVariantSlugs(prep);
         } finally {
