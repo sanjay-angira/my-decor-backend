@@ -729,6 +729,7 @@ export class CustomerService {
       : 0;
     const sortBy = (query.sortBy || 'newest').trim().toLowerCase();
     const newArrivals = this.parseBooleanFlag(query.newArrivals);
+    const bestSellers = this.parseBooleanFlag(query.bestSellers);
     const featured = this.parseBooleanFlag(query.featured);
     const bestDeals = this.parseBooleanFlag(query.bestDeals);
     const minDiscountRaw = query.minDiscount;
@@ -789,7 +790,16 @@ export class CustomerService {
       if (newArrivals) {
         const since = new Date();
         since.setDate(since.getDate() - 30);
-        idQb.andWhere('product.createdAt >= :since', { since });
+        idQb.andWhere(
+          '(product.newArrival = :newArrival OR product.createdAt >= :since)',
+          { newArrival: true, since },
+        );
+      }
+
+      if (bestSellers) {
+        idQb.andWhere('product.bestSeller = :bestSeller', {
+          bestSeller: true,
+        });
       }
 
       if (featured) {

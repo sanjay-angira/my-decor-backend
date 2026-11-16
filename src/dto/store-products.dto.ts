@@ -41,6 +41,10 @@ export class StoreProductsQueryDto extends PaginationDto {
 
   @IsString()
   @IsOptional()
+  bestSellers?: string;
+
+  @IsString()
+  @IsOptional()
   featured?: string;
 
   @IsString()

@@ -178,6 +178,7 @@ export class CustomerController {
     enum: ['newest', 'price_asc', 'price_desc', 'name_asc', 'discount_desc'],
   })
   @ApiQuery({ name: 'newArrivals', required: false, type: Boolean })
+  @ApiQuery({ name: 'bestSellers', required: false, type: Boolean })
   @ApiQuery({ name: 'featured', required: false, type: Boolean })
   @ApiQuery({ name: 'bestDeals', required: false, type: Boolean })
   async getStoreProducts(@Query() query: StoreProductsQueryDto) {
