@@ -389,9 +389,6 @@ export class CustomerService {
       .createQueryBuilder('category')
       .leftJoinAndSelect('category.parent', 'parent')
       .where('category.isActive = :isActive', { isActive: true })
-      .andWhere('"category"."publishStatus" = :publishStatus', {
-        publishStatus: 'published',
-      })
       .orderBy('category.categoryName', 'ASC')
       .getMany();
 
@@ -482,9 +479,6 @@ export class CustomerService {
       this.categoryRepository
         .createQueryBuilder('category')
         .where('category.isActive = :isActive', { isActive: true })
-        .andWhere('"category"."publishStatus" = :publishStatus', {
-          publishStatus: 'published',
-        })
         .andWhere(
           `(category.categoryName ILIKE :like
             OR category.categorySlug ILIKE :like)`,
@@ -578,9 +572,6 @@ export class CustomerService {
           .createQueryBuilder('category')
           .leftJoinAndSelect('category.parent', 'parent')
           .where('category.isActive = :isActive', { isActive: true })
-          .andWhere('"category"."publishStatus" = :publishStatus', {
-            publishStatus: 'published',
-          })
           .orderBy('category.categoryName', 'ASC')
           .getMany(),
         this.variationRepository
@@ -805,9 +796,13 @@ export class CustomerService {
       if (featured) {
         idQb
           .leftJoin('product.productOffers', 'productOffers')
-          .andWhere('productOffers.isActive = :featuredActive', {
-            featuredActive: true,
-          });
+          .andWhere(
+            '(product.isFeatured = :featured OR productOffers.isActive = :featuredActive)',
+            {
+              featured: true,
+              featuredActive: true,
+            },
+          );
       }
 
       if (hasMinRating) {
