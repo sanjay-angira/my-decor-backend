@@ -388,6 +388,7 @@ export class CustomerService {
     const categories = await this.categoryRepository
       .createQueryBuilder('category')
       .leftJoinAndSelect('category.parent', 'parent')
+      .leftJoinAndSelect('category.categoryOffers', 'categoryOffers')
       .where('category.isActive = :isActive', { isActive: true })
       .orderBy('category.categoryName', 'ASC')
       .getMany();
@@ -419,6 +420,16 @@ export class CustomerService {
             categoryMobileImageSource(category),
             400,
           ),
+          categoryOffers: (category.categoryOffers || [])
+            .filter((offer) => offer.isActive)
+            .map((offer) => ({
+              id: offer.id,
+              name: offer.offerName || offer.offerSlug || `Offer ${offer.id}`,
+              slug: offer.offerSlug,
+              desktopImage: offer.desktopImage || null,
+              tabletImage: offer.tabletImage || null,
+              mobileImage: offer.mobileImage || null,
+            })),
           productCount,
           parentId: category.parent?.id ?? null,
           href: category.categorySlug
