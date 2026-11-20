@@ -129,6 +129,13 @@ export class CustomerController {
     return this.customerService.getStoreCategories();
   }
 
+  @Get('offers')
+  @ApiOperation({ summary: 'Get active offers for storefront filters' })
+  @ApiQuery({ name: 'categorySlug', required: false, type: String })
+  async getStoreOffers(@Query('categorySlug') categorySlug?: string) {
+    return this.customerService.getStoreOffers(categorySlug?.trim());
+  }
+
   @Get('store-filters')
   @ApiOperation({
     summary: 'Get store filter options (categories, price range, banners)',

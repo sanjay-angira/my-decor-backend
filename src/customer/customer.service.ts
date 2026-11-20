@@ -445,6 +445,38 @@ export class CustomerService {
     );
   }
 
+  async getStoreOffers(categorySlug?: string) {
+    const query = this.offerRepository
+      .createQueryBuilder('offer')
+      .leftJoinAndSelect(
+        'offer.categories',
+        'category',
+        'category.isActive = :categoryIsActive',
+        { categoryIsActive: true },
+      )
+      .where('offer.isActive = :isActive', { isActive: true })
+      .orderBy('offer.offerName', 'ASC')
+      .addOrderBy('offer.id', 'ASC');
+
+    if (categorySlug) {
+      query.andWhere('category.categorySlug = :categorySlug', {
+        categorySlug,
+      });
+    }
+
+    const offers = await query.getMany();
+    return successResponse(
+      offers
+        .filter((offer) => this.isStoreOfferLive(offer))
+        .map((offer) => ({
+          id: offer.id,
+          name: offer.offerName || offer.offerSlug || `Offer ${offer.id}`,
+          slug: offer.offerSlug,
+        })),
+      'Store offers retrieved successfully',
+    );
+  }
+
   async searchStore(q?: string, limitRaw?: string | number) {
     const query = String(q || '')
       .trim()
