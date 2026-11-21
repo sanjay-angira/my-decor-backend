@@ -1,8 +1,6 @@
 import { PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  ArrayUnique,
-  IsArray,
   IsBoolean,
   IsInt,
   IsNotEmpty,
@@ -17,11 +15,6 @@ export class CreateRoomDto {
   @IsNotEmpty()
   @MaxLength(255)
   name!: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  slug?: string;
 
   @IsOptional()
   @IsString()
@@ -46,13 +39,6 @@ export class CreateRoomDto {
   @IsInt()
   @Min(0)
   sortOrder?: number;
-
-  @IsOptional()
-  @IsArray()
-  @ArrayUnique()
-  @Type(() => Number)
-  @IsInt({ each: true })
-  productIds?: number[];
 }
 
 export class UpdateRoomDto extends PartialType(CreateRoomDto) {}

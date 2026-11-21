@@ -736,6 +736,10 @@ export class CustomerService {
       .split(',')
       .map((id) => Number(id.trim()))
       .filter((id) => Number.isFinite(id) && id > 0);
+    const roomSlugs = (query.roomSlugs || '')
+      .split(',')
+      .map((slug) => slug.trim().toLowerCase())
+      .filter(Boolean);
     const minPriceRaw = query.minPrice;
     const maxPriceRaw = query.maxPrice;
     const minPrice = Number(minPriceRaw);
@@ -819,6 +823,12 @@ export class CustomerService {
         idQb
           .leftJoin('product.category', 'category')
           .andWhere('category.id IN (:...categoryIds)', { categoryIds });
+      }
+
+      if (roomSlugs.length > 0) {
+        idQb
+          .leftJoin('product.rooms', 'room')
+          .andWhere('LOWER(room.slug) IN (:...roomSlugs)', { roomSlugs });
       }
 
       if (newArrivals) {

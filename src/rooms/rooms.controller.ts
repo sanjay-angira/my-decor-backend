@@ -28,7 +28,7 @@ export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a room and optionally assign products' })
+  @ApiOperation({ summary: 'Create a room; products are assigned from product forms' })
   @ApiBody({ type: CreateRoomDto })
   create(@Body() dto: CreateRoomDto) {
     return this.roomsService.create(dto);
@@ -46,14 +46,14 @@ export class RoomsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get a room with its assigned products' })
+  @ApiOperation({ summary: 'Get a room' })
   @ApiParam({ name: 'id', type: Number })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.roomsService.findOne(id);
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update a room and its product assignments' })
+  @ApiOperation({ summary: 'Update room details' })
   @ApiParam({ name: 'id', type: Number })
   @ApiBody({ type: UpdateRoomDto })
   update(

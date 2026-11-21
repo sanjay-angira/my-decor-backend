@@ -7,6 +7,11 @@ export class StoreProductsQueryDto extends PaginationDto {
   @IsOptional()
   categoryIds?: string;
 
+  /** Comma-separated room slugs */
+  @IsString()
+  @IsOptional()
+  roomSlugs?: string;
+
   @IsString()
   @IsOptional()
   minPrice?: string;
