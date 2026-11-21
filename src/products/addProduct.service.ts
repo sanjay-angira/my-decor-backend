@@ -185,18 +185,6 @@ export class AddProductService {
           continue;
         }
 
-        if (rooms.length) {
-          await Promise.all(
-            rooms.map((room) =>
-              this.roomRepo
-                .createQueryBuilder()
-                .relation(Room, 'products')
-                .of(room.id)
-                .add(savedProduct.id),
-            ),
-          );
-        }
-
         product.productSlug = candidateSlug;
         try {
           savedProduct = await this.productRepo.save(product);
@@ -205,6 +193,18 @@ export class AddProductService {
           if (!isProductSlugConflict(error)) throw error;
           suffix += 1;
         }
+      }
+
+      if (rooms.length) {
+        await Promise.all(
+          rooms.map((room) =>
+            this.roomRepo
+              .createQueryBuilder()
+              .relation(Room, 'products')
+              .of(room.id)
+              .add(savedProduct.id),
+          ),
+        );
       }
 
       /* ================= VARIANTS ================= */
