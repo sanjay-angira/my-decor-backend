@@ -69,6 +69,7 @@ export class ProductsService {
         .leftJoinAndSelect('product.variants', 'variants')
         .leftJoinAndSelect('product.productOffers', 'productOffers')
         .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.rooms', 'rooms')
         .leftJoinAndSelect('product.warehouse', 'warehouse')
         .leftJoinAndSelect('product.productTags', 'productTags')
         .leftJoinAndSelect('product.productAttributes', 'productAttributes')

@@ -6,6 +6,7 @@ import { Product, PublishStatus } from 'src/entities/product/product.entity';
 import { Category } from 'src/entities/productCategory/category.entity';
 import { BlogPost } from 'src/entities/blog/blog-posts.entity';
 import { Offer } from 'src/entities/product/offer.entity';
+import { Room } from 'src/entities/product/room.entity';
 
 @Injectable()
 export class CustomerHomepageService {
@@ -18,7 +19,31 @@ export class CustomerHomepageService {
     private readonly blogRepository: Repository<BlogPost>,
     @InjectRepository(Offer)
     private readonly offerRepository: Repository<Offer>,
+    @InjectRepository(Room)
+    private readonly roomRepository: Repository<Room>,
   ) {}
+
+  async getHomepageRooms() {
+    const rooms = await this.roomRepository
+      .createQueryBuilder('room')
+      .select([
+        'room.id',
+        'room.name',
+        'room.slug',
+        'room.image',
+        'room.mobileImage',
+      ])
+      .where('room.isActive = :isActive', { isActive: true })
+      .andWhere('room.showOnHomePage = :showOnHomePage', {
+        showOnHomePage: true,
+      })
+      .andWhere('(room.image IS NOT NULL OR room.mobileImage IS NOT NULL)')
+      .orderBy('room.sortOrder', 'ASC')
+      .addOrderBy('room.id', 'ASC')
+      .getMany();
+
+    return successResponse(rooms, 'Homepage rooms retrieved successfully');
+  }
 
   async getHomepageBanners() {
     const [offers, categories] = await Promise.all([

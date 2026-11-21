@@ -28,6 +28,7 @@ import { RecentlyViewed } from 'src/entities/recently-viewed/recently-viewed.ent
 import { CustomerRecentlyViewedService } from './customer-recently-viewed.service';
 import { Offer } from 'src/entities/product/offer.entity';
 import { ShippingModule } from 'src/shipping/shipping.module';
+import { Room } from 'src/entities/product/room.entity';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ShippingModule } from 'src/shipping/shipping.module';
       Coupon,
       RecentlyViewed,
       Offer,
+      Room,
     ]),
     CommonModule,
     ShippingModule,

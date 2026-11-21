@@ -20,6 +20,7 @@ import { Faq } from './faq.entity';
 import { ProductSeo } from './product-seo.entity';
 import { ProductAttribute } from './product-attribute.entity';
 import { Warehouse } from './warehouse.entity';
+import { Room } from './room.entity';
 
 export enum PublishStatus {
   DRAFT = 'draft',
@@ -77,6 +78,9 @@ export class Product {
   @ManyToMany(() => Offer, (offer) => offer.products)
   @JoinTable()
   productOffers!: Offer[];
+
+  @ManyToMany(() => Room, (room) => room.products)
+  rooms!: Room[];
 
   @OneToMany(() => Tags, (tag) => tag.product, { cascade: true, eager: true })
   productTags!: Tags[];

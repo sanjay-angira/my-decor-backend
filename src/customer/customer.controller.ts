@@ -61,6 +61,13 @@ export class CustomerController {
     return this.customerHomepageService.getHomepageBanners();
   }
 
+  @Get('rooms')
+  @CustomerApi({ allowGuest: true })
+  @ApiOperation({ summary: 'Get active rooms selected for the storefront homepage' })
+  async getHomepageRooms() {
+    return this.customerHomepageService.getHomepageRooms();
+  }
+
   @Get('sitemap')
   @ApiOperation({
     summary:

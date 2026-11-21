@@ -28,6 +28,7 @@ import { CmsPageModule } from './cms-page/cms-page.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ShippingModule } from './shipping/shipping.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
+import { RoomsModule } from './rooms/rooms.module';
 import { renameProductImageUrlColumns } from './commonServices/rename-product-image-url';
 import { migrateCmsImagesOntoParents } from './commonServices/migrate-cms-images-onto-parents';
 import { removeHeaderCms } from './commonServices/remove-header-cms';
@@ -133,6 +134,7 @@ import { AdminAuthGuard } from './commonServices/admin-auth.guard';
     DashboardModule,
     ShippingModule,
     WarehousesModule,
+    RoomsModule,
   ],
   controllers: [],
   providers: [{ provide: APP_GUARD, useClass: AdminAuthGuard }],

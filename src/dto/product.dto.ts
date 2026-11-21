@@ -14,6 +14,7 @@ import {
   ValidateNested,
   IsInt,
   Matches,
+  ArrayUnique,
 } from 'class-validator';
 import { PublishStatus } from 'src/entities/product/product.entity';
 import { AtttributeViewOption } from 'src/entities/product/product-variant-attribute.entity';
@@ -279,6 +280,13 @@ export class CreateProductDto {
   @IsNumber({}, { each: true })
   productTags?: number[];
 
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @Type(() => Number)
+  @IsInt({ each: true })
+  roomIds?: number[];
+
   @IsArray()
   @ArrayMinSize(1, { message: 'At least one variant is required' })
   @ValidateNested({ each: true })
@@ -504,6 +512,13 @@ export class UpdateProductDto {
   @Type(() => Number)
   @IsNumber({}, { each: true })
   productTags?: number[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @Type(() => Number)
+  @IsInt({ each: true })
+  roomIds?: number[];
 
   @IsOptional()
   @IsArray()

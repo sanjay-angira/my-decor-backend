@@ -15,6 +15,7 @@ import { Attribute } from 'src/entities/product/attribute.entity';
 import { VariantAttribute } from 'src/entities/product/product-variant-attribute.entity';
 import { VariantImage } from 'src/entities/product/variant-image.entity';
 import { Warehouse } from 'src/entities/product/warehouse.entity';
+import { Room } from 'src/entities/product/room.entity';
 import { UpdateProductService } from './updateProduct.service';
 import { AddProductService } from './addProduct.service';
 import { AddProductSeoService } from './addProductSeo.service';
@@ -37,6 +38,7 @@ import { UpdateProductSeoService } from './updatedProductSeo.service';
       Faq,
       VariantImage,
       Warehouse,
+      Room,
     ]),
     CommonModule,
   ],

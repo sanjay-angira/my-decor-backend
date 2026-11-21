@@ -23,6 +23,7 @@ import { ProductAttribute } from 'src/entities/product/product-attribute.entity'
 import { Attribute } from 'src/entities/product/attribute.entity';
 import { AddProductSeoService } from './addProductSeo.service';
 import { AddProductVariantService } from './addProductVariant.service';
+import { Room } from 'src/entities/product/room.entity';
 
 function isProductSlugConflict(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false;
@@ -41,6 +42,8 @@ export class AddProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
+    @InjectRepository(Room)
+    private readonly roomRepo: Repository<Room>,
     @InjectRepository(Category)
     private readonly categoryRepo: Repository<Category>,
     @InjectRepository(Warehouse)
@@ -87,6 +90,14 @@ export class AddProductService {
         throw new BadRequestException(
           'Select an active, registered pickup warehouse',
         );
+      }
+
+      const roomIds = [...new Set(createProductDto.roomIds ?? [])];
+      const rooms = roomIds.length
+        ? await this.roomRepo.find({ where: { id: In(roomIds) } })
+        : [];
+      if (rooms.length !== roomIds.length) {
+        throw new NotFoundException('One or more rooms not found');
       }
 
       /* ================= OFFERS ================= */
@@ -174,6 +185,18 @@ export class AddProductService {
           continue;
         }
 
+        if (rooms.length) {
+          await Promise.all(
+            rooms.map((room) =>
+              this.roomRepo
+                .createQueryBuilder()
+                .relation(Room, 'products')
+                .of(room.id)
+                .add(savedProduct.id),
+            ),
+          );
+        }
+
         product.productSlug = candidateSlug;
         try {
           savedProduct = await this.productRepo.save(product);
@@ -250,6 +273,7 @@ export class AddProductService {
           'productTags',
           'productOffers',
           'category',
+          'rooms',
         ],
       });
 

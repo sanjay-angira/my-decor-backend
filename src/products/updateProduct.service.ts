@@ -23,12 +23,15 @@ import {
   WarehouseRegistrationStatus,
 } from 'src/entities/product/warehouse.entity';
 import { UtilityService } from 'src/commonServices/utility.service';
+import { Room } from 'src/entities/product/room.entity';
 
 @Injectable()
 export class UpdateProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
+    @InjectRepository(Room)
+    private readonly roomRepo: Repository<Room>,
     @InjectRepository(Offer)
     private readonly offerRepo: Repository<Offer>,
     @InjectRepository(Tags)
@@ -58,6 +61,9 @@ export class UpdateProductService {
       if (updateProductDto.frequentlyBoughtTogether !== undefined) {
         relationsToLoad.push('frequentlyBoughtTogether');
       }
+      if (updateProductDto.roomIds !== undefined) {
+        relationsToLoad.push('rooms');
+      }
       relationsToLoad.push('warehouse');
 
       const product = await this.productRepo.findOne({
@@ -76,6 +82,11 @@ export class UpdateProductService {
       ) {
         throw new BadRequestException('At least one variant is required');
       }
+
+      const roomsToSet =
+        updateProductDto.roomIds !== undefined
+          ? await this.resolveRooms(updateProductDto.roomIds)
+          : null;
 
       /* ================= BASIC UPDATE ================= */
 
@@ -192,6 +203,14 @@ export class UpdateProductService {
 
       const savedProduct = await this.productRepo.save(product);
 
+      if (roomsToSet) {
+        await this.updateRoomAssignments(
+          product.id,
+          product.rooms ?? [],
+          roomsToSet,
+        );
+      }
+
       /* ================= PRODUCT ATTRIBUTES ================= */
       if (updateProductDto.attributes !== undefined) {
         await this.productAttributeRepo.delete({ product: { id: product.id } });
@@ -256,6 +275,7 @@ export class UpdateProductService {
           'productAttributes',
           'productAttributes.attribute',
           'reviews',
+          'rooms',
         ],
         loadEagerRelations: false,
         relationLoadStrategy: 'query',
@@ -269,6 +289,47 @@ export class UpdateProductService {
     } catch (error) {
       throw error;
     }
+  }
+
+  private async resolveRooms(roomIds: number[]): Promise<Room[]> {
+    const uniqueIds = [...new Set(roomIds)];
+    if (!uniqueIds.length) return [];
+
+    const rooms = await this.roomRepo.find({
+      where: { id: In(uniqueIds) },
+    });
+    if (rooms.length !== uniqueIds.length) {
+      throw new NotFoundException('One or more rooms not found');
+    }
+    return rooms;
+  }
+
+  private async updateRoomAssignments(
+    productId: number,
+    previousRooms: Room[],
+    nextRooms: Room[],
+  ): Promise<void> {
+    const nextIds = new Set(nextRooms.map((room) => room.id));
+    const previousIds = new Set(previousRooms.map((room) => room.id));
+    const toAdd = nextRooms.filter((room) => !previousIds.has(room.id));
+    const toRemove = previousRooms.filter((room) => !nextIds.has(room.id));
+
+    await Promise.all([
+      ...toAdd.map((room) =>
+        this.roomRepo
+          .createQueryBuilder()
+          .relation(Room, 'products')
+          .of(room.id)
+          .add(productId),
+      ),
+      ...toRemove.map((room) =>
+        this.roomRepo
+          .createQueryBuilder()
+          .relation(Room, 'products')
+          .of(room.id)
+          .remove(productId),
+      ),
+    ]);
   }
 
   private async generateUniqueProductSlug(
