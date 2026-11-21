@@ -23,6 +23,72 @@ export class CustomerHomepageService {
     private readonly roomRepository: Repository<Room>,
   ) {}
 
+  async getFeaturedCategories() {
+    const products = await this.productRepository
+      .createQueryBuilder('product')
+      .innerJoinAndSelect('product.category', 'category')
+      .select([
+        'product.id',
+        'category.id',
+        'category.categoryName',
+        'category.categorySlug',
+        'category.shortDescription',
+        'category.description',
+        'category.image',
+        'category.desktopBanner',
+        'category.tabletBanner',
+        'category.mobileBanner',
+      ])
+      .where('product.isActive = :isActive', { isActive: true })
+      .andWhere('product.publishStatus = :publishStatus', {
+        publishStatus: PublishStatus.PUBLISHED,
+      })
+      .andWhere('product.isFeatured = :isFeatured', { isFeatured: true })
+      .andWhere('category.isActive = :categoryActive', {
+        categoryActive: true,
+      })
+      .getMany();
+
+    const categories = new Map<
+      number,
+      {
+        id: number;
+        title: string;
+        slug: string;
+        blurb: string;
+        image: string | null;
+        mobileImage: string | null;
+      }
+    >();
+
+    for (const product of products) {
+      const category = product.category;
+      if (!category?.id || categories.has(category.id)) continue;
+
+      categories.set(category.id, {
+        id: category.id,
+        title: category.categoryName || 'Featured Collection',
+        slug: category.categorySlug || '',
+        blurb:
+          category.shortDescription?.trim() ||
+          category.description?.replace(/<[^>]*>/g, ' ').trim() ||
+          '',
+        image:
+          category.image ||
+          category.desktopBanner ||
+          category.tabletBanner ||
+          category.mobileBanner ||
+          null,
+        mobileImage: category.mobileBanner || null,
+      });
+    }
+
+    return successResponse(
+      [...categories.values()].filter((category) => category.slug),
+      'Featured categories retrieved successfully',
+    );
+  }
+
   async getHomepageRooms() {
     const rooms = await this.roomRepository
       .createQueryBuilder('room')

@@ -68,6 +68,15 @@ export class CustomerController {
     return this.customerHomepageService.getHomepageRooms();
   }
 
+  @Get('featured-categories')
+  @CustomerApi({ allowGuest: true })
+  @ApiOperation({
+    summary: 'Get active categories containing featured products',
+  })
+  async getFeaturedCategories() {
+    return this.customerHomepageService.getFeaturedCategories();
+  }
+
   @Get('sitemap')
   @ApiOperation({
     summary:
