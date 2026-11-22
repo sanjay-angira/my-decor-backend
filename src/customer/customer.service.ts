@@ -409,8 +409,10 @@ export class CustomerService {
           slug: category.categorySlug,
           description: category.description || '',
           shortDescription: category.shortDescription || '',
-          image: pickOptimizedImageUrl(categoryImageSource(category), 400),
-          desktopBanner: pickOptimizedImageUrl(categoryImageSource(category), 1920),
+          image: pickOptimizedImageUrl(category.image, 400) || null,
+          image3x2: category.image3x2 || null,
+          desktopBanner:
+            pickOptimizedImageUrl(category.desktopBanner, 1920) || null,
           tabletBanner: category.tabletBanner || null,
           mobileBanner: pickOptimizedImageUrl(
             categoryMobileImageSource(category),
