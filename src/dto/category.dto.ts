@@ -131,6 +131,11 @@ export class CreateCategoryDto {
   @IsString()
   image?: string;
 
+  @ApiPropertyOptional({ description: '3:2 featured category image URL' })
+  @IsOptional()
+  @IsString()
+  image3x2?: string;
+
   @ApiPropertyOptional({ description: 'Desktop category banner uploaded as WebP' })
   @IsOptional()
   @IsString()
@@ -207,6 +212,11 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   image?: string | null;
+
+  @ApiPropertyOptional({ description: '3:2 featured category image URL' })
+  @IsOptional()
+  @IsString()
+  image3x2?: string | null;
 
   @ApiPropertyOptional({ description: 'Desktop category banner uploaded as WebP' })
   @IsOptional()

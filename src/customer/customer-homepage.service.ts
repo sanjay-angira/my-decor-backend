@@ -35,6 +35,7 @@ export class CustomerHomepageService {
         'category.shortDescription',
         'category.description',
         'category.image',
+        'category.image3x2',
         'category.desktopBanner',
         'category.tabletBanner',
         'category.mobileBanner',
@@ -57,6 +58,7 @@ export class CustomerHomepageService {
         slug: string;
         blurb: string;
         image: string | null;
+        image3x2: string | null;
         mobileImage: string | null;
       }
     >();
@@ -79,6 +81,7 @@ export class CustomerHomepageService {
           category.tabletBanner ||
           category.mobileBanner ||
           null,
+        image3x2: category.image3x2 || null,
         mobileImage: category.mobileBanner || null,
       });
     }

@@ -7,6 +7,7 @@ import {
 export type ImageOptimizationType =
   | 'product'
   | 'category'
+  | 'category_3x2'
   | 'category_desktop'
   | 'category_tablet'
   | 'category_banner'
@@ -43,6 +44,13 @@ export const IMAGE_OPTIMIZATION_PRESETS: Record<
     type: 'category',
     folder: 'categories',
     widths: [800],
+    webpQuality: 82,
+    webpOnly: true,
+  },
+  category_3x2: {
+    type: 'category_3x2',
+    folder: 'categories/3x2',
+    widths: [1200],
     webpQuality: 82,
     webpOnly: true,
   },

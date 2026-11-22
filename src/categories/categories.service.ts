@@ -38,6 +38,7 @@ export class CategoriesService {
       description,
       isActive,
       image,
+      image3x2,
       video,
       desktopBanner,
       tabletBanner,
@@ -72,6 +73,7 @@ export class CategoriesService {
         tabletBanner: tabletBanner ?? null,
         mobileBanner: mobileBanner ?? null,
         image: image ?? desktopBanner ?? null,
+        image3x2: image3x2 ?? null,
         video: video ?? null,
         showOnHomePage,
         useAsHeroBanner: useAsHeroBanner ?? false,
@@ -160,6 +162,7 @@ export class CategoriesService {
       description,
       isActive,
       image,
+      image3x2,
       desktopBanner,
       tabletBanner,
       mobileBanner,
@@ -210,6 +213,7 @@ export class CategoriesService {
       }
       if (image !== undefined) category.image = image;
       else if (desktopBanner !== undefined) category.image = desktopBanner;
+      if (image3x2 !== undefined) category.image3x2 = image3x2;
       if (tabletBanner !== undefined) category.tabletBanner = tabletBanner;
       if (mobileBanner !== undefined) category.mobileBanner = mobileBanner;
       if (video !== undefined) category.video = video;

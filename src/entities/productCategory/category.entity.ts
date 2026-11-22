@@ -46,6 +46,10 @@ export class Category {
   @Column({ type: 'varchar', length: 2048, nullable: true })
   image!: string | null;
 
+  /** 3:2 category image for featured homepage cards. */
+  @Column({ type: 'varchar', length: 2048, nullable: true })
+  image3x2!: string | null;
+
   @Column({ type: 'varchar', length: 2048, nullable: true })
   video!: string | null;
 

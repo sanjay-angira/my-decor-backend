@@ -26,6 +26,9 @@ describe('migrateCategoryResponsiveImages', () => {
       expect.stringContaining('ADD COLUMN IF NOT EXISTS "mobileBanner"'),
     );
     expect(query).toHaveBeenCalledWith(
+      expect.stringContaining('ADD COLUMN IF NOT EXISTS "image3x2"'),
+    );
+    expect(query).toHaveBeenCalledWith(
       expect.stringContaining('ADD COLUMN IF NOT EXISTS video character varying(2048)'),
     );
     expect(query).toHaveBeenCalledWith(
